@@ -62,7 +62,7 @@ export class TextDocumentContentProvider extends Disposable implements vscode.Te
                 </script>
             </head>
             <body onload="start()">
-                <iframe id="myframe" frameborder="0" style="border: 0px solid transparent; height:100%; width:100%;" src="" seamless></iframe>
+                <iframe id="myframe" frameborder="0" style="border: 0px solid transparent; height: calc(100% - 4px); width: 100%;" src="" seamless></iframe>
             </body>
             </html>`;
         return Promise.resolve(htmlContent);

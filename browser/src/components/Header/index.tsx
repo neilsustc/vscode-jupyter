@@ -15,17 +15,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props?: HeaderProps, context?: any) {
     super(props, context);
   }
+
   render() {
     return (
       <header>
         <label>
           <input type="checkbox"
-            style="vertical-align: middle;"
+            style={{ verticalAlign: 'middle' }}
             checked={this.props.appendResults}
             onChange={() => this.props.toggleAppendResults()} />
-          Append Results&nbsp;
+          Append Results
         </label>
-        &nbsp;<button onClick={() => this.props.clearResults()}>Clear Results</button>
+        &nbsp;
+        <button onClick={() => this.props.clearResults()}>Clear Results</button>
       </header>
     );
   }
