@@ -183,9 +183,7 @@ export class Jupyter extends vscode.Disposable {
     }
     private executeAndDisplay(kernel: Kernel.IKernel, code: string): Promise<any> {
         let observable = this.executeCodeInKernel(kernel, code);
-        let executor = (code: string) => this.executeCodeInKernel(kernel, code);
-
-        return this.display.showResults(observable, executor);
+        return this.display.showResults(observable);
     }
     private executeCodeInKernel(kernel: Kernel.IKernel, code: string): Rx.Observable<ParsedIOMessage> {
         if (this.jupyterVersionWorksWithJSServices) {

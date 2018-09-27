@@ -4,8 +4,6 @@ declare type NotebookOutput = {
 }
 declare interface NotebookResultSettings {
   appendResults?: boolean;
-  showVariables?: boolean;
-  toggledVariables?: { [index: string]: boolean };
 }
 declare type NotebookResultsState = NotebookOutput[];
 
