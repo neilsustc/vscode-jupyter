@@ -18,7 +18,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
   render() {
     return (
-      <header>
+      <header style={{ position: 'fixed', top: '0', left: '0', width: 'calc(100% - 1em)', padding: '.5em', boxShadow: '0px 0px 6px rgba(0, 0, 0, 0.5)' }}>
         <label>
           <input type="checkbox"
             style={{ verticalAlign: 'middle' }}

@@ -17,7 +17,7 @@ class ResultList extends React.Component<ResultProps, ResultState> {
       <Result key={result.id} result={result} />
     );
     return (
-      <div style={{ padding: '.3em .5em 0 .5em' }}>
+      <div style={{ position: 'fixed', top: 'calc(.5em + 21px + 1em)', left: '.5em', width: 'calc(100% - 1em)', height: 'calc(100% - .5em - 21px - 1em)', overflow: 'auto' }}>
         {results}
       </div>
     );
