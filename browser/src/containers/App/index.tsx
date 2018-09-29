@@ -40,7 +40,9 @@ class App extends React.Component<AppProps, AppState>{
       }
       this.socket.emit('results.ack');
       this.props.resultActions.addResults(value);
-      window.scrollTo(0, document.body.scrollHeight);
+
+      let resultsList = document.getElementById('results-list');
+      resultsList.scrollTop = resultsList.scrollHeight;
     });
   }
 
