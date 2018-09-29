@@ -1,0 +1,9 @@
+install:
+  - npm ci
+  - npm install -g vsce webpack@2.7.0 webpack-cli@2.0.0
+
+build_script:
+  - vsce package
+
+artifacts:
+  - path: '*.vsix'
