@@ -9,7 +9,8 @@ export class KernelStatus extends vscode.Disposable {
     constructor() {
         super(() => { });
         this.disposables = [];
-        this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+        // Try placing it right to Python interpreter selector
+        this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, -1);
         this.statusBar.command = 'jupyter.proxyKernelOptionsCmd';
         this.disposables.push(this.statusBar);
         this.disposables.push(vscode.commands.registerCommand('jupyter.proxyKernelOptionsCmd', () => {
