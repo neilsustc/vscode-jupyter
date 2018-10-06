@@ -34,8 +34,6 @@ export class JupyterCodeLensProvider implements CodeLensProvider {
         });
 
         this.cache.push({ fileName: document.fileName, documentVersion: document.version, lenses: lenses });
-
-        // return Promise.resolve(lenses);
-        return Promise.resolve([]);
+        return Promise.resolve(lenses);
     }
 }
