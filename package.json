@@ -60,6 +60,11 @@
         "command": "jupyter.runSelectionLine",
         "key": "ctrl+alt+enter",
         "when": "editorFocus && !replaceActive && !searchViewletVisible && !findWidgetVisible"
+      },
+      {
+        "command": "jupyter.execCurrentCell",
+        "key": "ctrl+enter",
+        "when": "editorTextFocus && editorLangId == 'python' && jupyter.document.hasCodeCells && !replaceActive && !searchViewletVisible && !findWidgetVisible"
       }
     ],
     "commands": [
