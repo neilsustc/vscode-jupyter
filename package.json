@@ -238,6 +238,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "jupyter.cellCodeLens.enabled": {
+          "type": "boolean",
+          "default": false
         }
       }
     }

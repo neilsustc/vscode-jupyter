@@ -109,7 +109,7 @@ export class Jupyter extends vscode.Disposable {
     }
     public hasCodeCells(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<boolean> {
         return new Promise<boolean>(resolve => {
-            this.codeLensProvider.provideCodeLenses(document, token).then(codeLenses => {
+            this.codeLensProvider.getCodeLenses(document, token).then(codeLenses => {
                 resolve(Array.isArray(codeLenses) && codeLenses.length > 0);
             }, reason => {
                 console.error('Failed to detect code cells in document');

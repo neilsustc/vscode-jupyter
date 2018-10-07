@@ -18,6 +18,11 @@ export function activate(context: vscode.ExtensionContext) {
     let jupyter = new Jupyter(outputChannel);
     context.subscriptions.push(jupyter);
 
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor) {
+        jupyter.hasCodeCells(activeEditor.document, null);
+    }
+
     return {
         registerLanguageProvider: (language: string, provider: LanguageProvider) => {
             LanguageProviders.registerLanguageProvider(language, provider);

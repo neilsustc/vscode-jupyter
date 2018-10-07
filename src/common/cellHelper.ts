@@ -14,7 +14,7 @@ export class CellHelper {
             return Promise.resolve(null);
         }
 
-        return this.cellCodeLenses.provideCodeLenses(activeEditor.document, null).then(lenses => {
+        return this.cellCodeLenses.getCodeLenses(activeEditor.document, null).then(lenses => {
             if (lenses.length === 0) {
                 return null;
             }

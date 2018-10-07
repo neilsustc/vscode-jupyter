@@ -1,14 +1,14 @@
 'use strict';
 
-import { CodeLensProvider, TextDocument, CancellationToken, CodeLens, Command } from 'vscode';
+import { CodeLensProvider, TextDocument, CancellationToken, CodeLens, Command, workspace, window } from 'vscode';
 import { Commands } from '../common/constants';
 import { CellHelper } from '../common/cellHelper';
 
 export class JupyterCodeLensProvider implements CodeLensProvider {
+
     private cache: { fileName: string, documentVersion: number, lenses: CodeLens[] }[] = [];
-    public provideCodeLenses(document: TextDocument, token: CancellationToken): Thenable<CodeLens[]> {
-        // Implement our own cache for others to use
-        // Yes VS Code also caches, but we want to cache for our own usage
+
+    public getCodeLenses(document: TextDocument, _: CancellationToken) {
         const index = this.cache.findIndex(item => item.fileName === document.fileName);
         if (index >= 0) {
             const item = this.cache[index];
@@ -34,6 +34,15 @@ export class JupyterCodeLensProvider implements CodeLensProvider {
         });
 
         this.cache.push({ fileName: document.fileName, documentVersion: document.version, lenses: lenses });
+
         return Promise.resolve(lenses);
+    }
+
+    public provideCodeLenses(document: TextDocument, token: CancellationToken): Thenable<CodeLens[]> {
+        if (workspace.getConfiguration("jupyter.cellCodeLens").get<boolean>("enabled")) {
+            return this.getCodeLenses(document, token);
+        } else {
+            return Promise.resolve([]);
+        }
     }
 }
