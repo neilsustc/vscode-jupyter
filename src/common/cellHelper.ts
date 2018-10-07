@@ -1,15 +1,14 @@
+import { Position, Range, Selection, TextDocument, window } from 'vscode';
 import { Cell } from '../contracts';
-import { TextDocument, Range } from 'vscode';
 import { JupyterCodeLensProvider } from '../editorIntegration/codeLensProvider';
-import { LanguageProviders } from './languageProvider';
-import * as vscode from 'vscode';
 import { EditorContextKey } from './EditorContext';
+import { LanguageProviders } from './languageProvider';
 
 export class CellHelper {
-    constructor(private cellCodeLenses: JupyterCodeLensProvider) {
-    }
-    public getActiveCell(): Thenable<{ cell: vscode.Range, nextCell?: vscode.Range, previousCell?: vscode.Range }> {
-        const activeEditor = vscode.window.activeTextEditor;
+    constructor(private cellCodeLenses: JupyterCodeLensProvider) { }
+
+    public getActiveCell(): Thenable<{ cell: Range, nextCell?: Range, previousCell?: Range }> {
+        const activeEditor = window.activeTextEditor;
         if (!activeEditor || !activeEditor.document) {
             return Promise.resolve(null);
         }
@@ -18,9 +17,9 @@ export class CellHelper {
             if (lenses.length === 0) {
                 return null;
             }
-            let currentCellRange: vscode.Range;
-            let nextCellRange: vscode.Range;
-            let previousCellRange: vscode.Range;
+            let currentCellRange: Range;
+            let nextCellRange: Range;
+            let previousCellRange: Range;
             lenses.forEach((lens, index) => {
                 if (lens.range.contains(activeEditor.selection.start)) {
                     currentCellRange = lens.range;
@@ -39,7 +38,7 @@ export class CellHelper {
         });
     }
     public goToPreviousCell(): Thenable<any> {
-        const activeEditor = vscode.window.activeTextEditor;
+        const activeEditor = window.activeTextEditor;
         if (!activeEditor || !activeEditor.document) {
             return Promise.resolve();
         }
@@ -51,7 +50,7 @@ export class CellHelper {
         });
     }
     public goToNextCell(): Thenable<any> {
-        const activeEditor = vscode.window.activeTextEditor;
+        const activeEditor = window.activeTextEditor;
         if (!activeEditor || !activeEditor.document) {
             return Promise.resolve();
         }
@@ -62,11 +61,11 @@ export class CellHelper {
             return this.advanceToCell(activeEditor.document, cellInfo.nextCell);
         });
     }
-    public advanceToCell(document: vscode.TextDocument, range: vscode.Range): Promise<any> {
+    public advanceToCell(document: TextDocument, range: Range): Promise<any> {
         if (!range || !document) {
             return;
         }
-        const textEditor = vscode.window.visibleTextEditors.find(editor => editor.document && editor.document.fileName === document.fileName);
+        const textEditor = window.visibleTextEditors.find(editor => editor.document && editor.document.fileName === document.fileName);
         if (!textEditor) {
             return;
         }
@@ -77,7 +76,7 @@ export class CellHelper {
         // Quirk 2: If the first character starts with a %, then for some reason the highlighter doesn't kick in (event' not fired)
         let firstLineOfCellRange = Promise.resolve(range);
         if (range.start.line < range.end.line) {
-            let rangeToSearchIn = new vscode.Range(new vscode.Position(range.start.line + 1, 0), range.end);
+            let rangeToSearchIn = new Range(new Position(range.start.line + 1, 0), range.end);
             let firstLine = LanguageProviders.getFirstLineOfExecutableCode(document.languageId, range, document, rangeToSearchIn);
             firstLineOfCellRange = firstLine.then(line => {
                 return document.lineAt(line).range;
@@ -86,9 +85,9 @@ export class CellHelper {
 
         firstLineOfCellRange.then(range => {
             textEditor.selections = [];
-            textEditor.selection = new vscode.Selection(range.start, range.start);
+            textEditor.selection = new Selection(range.start, range.start);
             textEditor.revealRange(range);
-            vscode.window.showTextDocument(textEditor.document);
+            window.showTextDocument(textEditor.document);
         });
     }
 

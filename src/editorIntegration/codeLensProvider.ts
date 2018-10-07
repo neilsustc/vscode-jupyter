@@ -1,8 +1,8 @@
 'use strict';
 
-import { CodeLensProvider, TextDocument, CancellationToken, CodeLens, Command, workspace, window } from 'vscode';
-import { Commands } from '../common/constants';
+import { CancellationToken, CodeLens, CodeLensProvider, Command, TextDocument, workspace } from 'vscode';
 import { CellHelper } from '../common/cellHelper';
+import { Commands } from '../common/constants';
 
 export class JupyterCodeLensProvider implements CodeLensProvider {
 

@@ -1,22 +1,22 @@
+import { Kernel } from '@jupyterlab/services';
+import * as Rx from 'rx';
 import * as vscode from 'vscode';
-import { JupyterDisplay } from './display/main';
-import { KernelStatus } from './display/kernelStatus';
+import { CodeHelper } from './common/codeHelper';
 import { Commands } from './common/constants';
+import { createDeferred, Deferred } from './common/helpers';
+import { LanguageProviders } from './common/languageProvider';
+import { formatErrorForLogging } from './common/utils';
+import { ParsedIOMessage } from './contracts';
+import { KernelStatus } from './display/kernelStatus';
+import { JupyterDisplay } from './display/main';
 import { JupyterCodeLensProvider } from './editorIntegration/codeLensProvider';
 import { JupyterSymbolProvider } from './editorIntegration/symbolProvider';
-import { formatErrorForLogging } from './common/utils';
-import { CodeHelper } from './common/codeHelper';
-import { KernelManagerImpl } from './kernel-manager';
-import { ParsedIOMessage } from './contracts';
 import { MessageParser } from './jupyterServices/jupyter_client/resultParser';
-import { LanguageProviders } from './common/languageProvider';
-import * as Rx from 'rx';
-import { Kernel } from '@jupyterlab/services';
-import { NotebookManager, Notebook, inputNotebookDetails, selectExistingNotebook } from './jupyterServices/notebook/manager';
 import { Manager } from './jupyterServices/manager';
-import * as PyManager from './pythonClient/manager';
-import { Deferred, createDeferred } from './common/helpers';
+import { inputNotebookDetails, Notebook, NotebookManager, selectExistingNotebook } from './jupyterServices/notebook/manager';
+import { KernelManagerImpl } from './kernel-manager';
 import { JupyterClientAdapter } from "./pythonClient/jupyter_client/main";
+import * as PyManager from './pythonClient/manager';
 
 // Todo: Refactor the error handling and displaying of messages
 export class Jupyter extends vscode.Disposable {
