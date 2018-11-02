@@ -70,8 +70,9 @@ function parseNotebookListItem(item: string) {
         baseUrl: urlOnly
     }
 }
+
 export function selectExistingNotebook() {
-    let def = createDeferred<Notebook>();
+    let deferred = createDeferred<Notebook>();
     getAvailableNotebooks()
         .then(notebooks => {
             let items = notebooks.map(item => {
@@ -86,15 +87,15 @@ export function selectExistingNotebook() {
             window.showQuickPick(items)
                 .then(item => {
                     if (item) {
-                        def.resolve(item.notebook);
+                        deferred.resolve(item.notebook);
                     }
                     else {
-                        def.resolve();
+                        deferred.resolve();
                     }
                 });
         });
 
-    return def.promise;
+    return deferred.promise;
 }
 
 export function inputNotebookDetails(): Promise<Notebook> {

@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events';
-import { Disposable, window } from 'vscode';
+import { Disposable, window, workspace } from 'vscode';
 import { createDeferred } from '../../common/helpers';
 import { Notebook } from './contracts';
 import { NotebookFactory } from './factory';
-import { selectExistingNotebook } from './utils';
+import { getAvailableNotebooks } from './utils';
+import { SystemVariables } from '../../common/systemVariables';
 
 export { Notebook } from './contracts';
 export { inputNotebookDetails, selectExistingNotebook } from './utils';
@@ -55,28 +56,59 @@ export class NotebookManager extends EventEmitter {
         if (this._currentNotebook && this._currentNotebook.baseUrl.length > 0) {
             return Promise.resolve(this._currentNotebook);
         }
-        const startNew = 'Start a new Notebook';
-        const selectExisting = 'Select an existing Notebook';
-        let def = createDeferred<Notebook>();
-        window.showQuickPick([startNew, selectExisting]).then(option => {
-            if (!option) {
-                return def.resolve();
-            }
-            if (option === startNew) {
-                this.factory.startNewNotebook()
-                    .then(def.resolve.bind(def))
-                    .catch(def.reject.bind(def));
-            }
-            else {
-                selectExistingNotebook()
-                    .then(def.resolve.bind(def))
-                    .catch(def.reject.bind(def));
-            }
-        });
-        def.promise.then(nb => {
+
+        let deferred = createDeferred<Notebook>();
+
+        const strStartNew = 'Start a new notebook';
+        const strSelectExisting = 'Select an existing notebook';
+
+        let sysVars = new SystemVariables();
+        let jupyterSettings = workspace.getConfiguration('jupyter');
+        let startupFolder = sysVars.resolve(jupyterSettings.get('notebook.startupFolder', workspace.rootPath || __dirname));
+        if (startupFolder.match(/^[c-z]:/)) {
+            startupFolder = startupFolder[0].toUpperCase() + startupFolder.substring(1);
+        }
+
+        // TODO: nb.startupFolder is wrong
+        // TODO: make QuickPickItems to be Thenable<>
+        getAvailableNotebooks()
+            .then(notebooks => {
+                let nbItems = notebooks.map(nb => {
+                    let details = nb.startupFolder && nb.startupFolder.length > 0 ? `startup folder: ${nb.startupFolder}` : '';
+                    return {
+                        label: strSelectExisting,
+                        description: nb.baseUrl,
+                        detail: details,
+                        notebook: nb
+                    };
+                });
+                window.showQuickPick([
+                    ...nbItems,
+                    {
+                        label: strStartNew,
+                        description: '',
+                        detail: `at ${startupFolder}`,
+                        notebook: undefined
+                    }
+                ]).then(item => {
+                    if (!item) {
+                        deferred.resolve();
+                    } else {
+                        if (item.label === strStartNew) {
+                            this.factory.startNewNotebook()
+                                .then(deferred.resolve.bind(deferred))
+                                .catch(deferred.reject.bind(deferred));
+                        } else {
+                            deferred.resolve(item.notebook);
+                        }
+                    }
+                });
+            });
+
+        deferred.promise.then(nb => {
             this._currentNotebook = nb;
-            return nb;
         });
-        return def.promise;
+
+        return deferred.promise;
     }
 }
