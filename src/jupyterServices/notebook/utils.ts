@@ -1,8 +1,7 @@
-import { Notebook } from './contracts';
-import { execSync } from 'child_process';
+import { window } from 'vscode';
 import { createDeferred } from '../../common/helpers';
 import { execPythonFileSync } from '../../common/procUtils';
-import { window } from 'vscode';
+import { Notebook } from './contracts';
 
 export function getAvailableNotebooks(): Promise<Notebook[]> {
     return execPythonFileSync('jupyter', ['notebook', 'list'], __dirname)
@@ -51,6 +50,7 @@ export function waitForNotebookToStart(baseUrl: string, retryInterval: number, t
     setTimeout(() => check(), 0);
     return def.promise;
 }
+
 function parseNotebookListItem(item: string) {
     if (!item.trim().startsWith('http')) {
         return;
@@ -58,6 +58,9 @@ function parseNotebookListItem(item: string) {
     let parts = item.split('::').filter(part => part !== '::').map(part => part.trim());
     let url = parts.shift();
     let startupFolder = item.indexOf('::') > 0 ? parts[0].trim() : null;
+    if (startupFolder.match(/^[c-z]:/)) {
+        startupFolder = startupFolder[0].toUpperCase() + startupFolder.substring(1);
+    }
     let token = '';
     let urlOnly = url;
     if (url.indexOf('token=') > 0) {

@@ -69,12 +69,11 @@ export class NotebookManager extends EventEmitter {
             startupFolder = startupFolder[0].toUpperCase() + startupFolder.substring(1);
         }
 
-        // TODO: nb.startupFolder is wrong
         // TODO: make QuickPickItems to be Thenable<>
         getAvailableNotebooks()
             .then(notebooks => {
                 let nbItems = notebooks.map(nb => {
-                    let details = nb.startupFolder && nb.startupFolder.length > 0 ? `startup folder: ${nb.startupFolder}` : '';
+                    let details = nb.startupFolder && nb.startupFolder.length > 0 ? `Working directory: ${nb.startupFolder}` : '';
                     return {
                         label: strSelectExisting,
                         description: nb.baseUrl,

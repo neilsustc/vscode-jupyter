@@ -58,7 +58,7 @@ export class NotebookFactory extends EventEmitter {
         this.notebookOutputChannel.appendLine('Starting Jupyter Notebook');
         this.notebookOutputChannel.appendLine('jupyter ' + ['notebook'].concat(args).join(' '));
 
-        return spanwPythonFile('jupyter', ['notebook'].concat(args), startupFolder)
+        return spanwPythonFile('jupyter', ['notebook', ...args, '--notebook-dir', startupFolder], '')
             .then(proc => {
                 this.proc = proc;
                 this.proc.stderr.on('data', data => {
