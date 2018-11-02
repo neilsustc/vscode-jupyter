@@ -145,12 +145,6 @@ export class JupyterDisplay extends vscode.Disposable {
                 args: [selectedKernel]
             },
             {
-                label: ` `,
-                description: ' ',
-                command: '',
-                args: []
-            },
-            {
                 label: `Select another ${spec.language} Kernel`,
                 description: ` `,
                 command: Commands.Jupyter.Kernel.Select,
