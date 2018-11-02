@@ -1,17 +1,12 @@
-import * as vscode from 'vscode';
-import { EventEmitter } from 'events';
-import { formatErrorForLogging } from '../common/utils';
-import { execPythonFileSync } from '../common/procUtils';
-import { createDeferred } from '../common/helpers';
 import { Kernel } from '@jupyterlab/services';
-import { LanguageProviders } from '../common/languageProvider';
-import { MessageParser } from '../jupyterServices/jupyter_client/resultParser';
-import { ParsedIOMessage } from '../contracts';
 import * as Rx from 'rx';
-import { NotebookManager } from '../jupyterServices/notebook/manager';
+import * as vscode from 'vscode';
+import { createDeferred } from '../common/helpers';
+import { ParsedIOMessage } from '../contracts';
 import { ProgressBar } from '../display/progressBar';
+import { MessageParser } from '../jupyterServices/jupyter_client/resultParser';
+import { NotebookManager } from '../jupyterServices/notebook/manager';
 import { KernelManagerImpl } from "../kernel-manager";
-const semver = require('semver');
 
 export class Manager extends KernelManagerImpl {
     constructor(outputChannel: vscode.OutputChannel, notebookManager: NotebookManager) {
@@ -48,6 +43,7 @@ export class Manager extends KernelManagerImpl {
         });
         return def.promise;
     }
+
     public async startKernel(kernelSpec: Kernel.ISpecModel, language: string): Promise<Kernel.IKernel> {
         let nb = await this.getNotebook();
         if (!nb || nb.baseUrl.length === 0) {
@@ -66,6 +62,7 @@ export class Manager extends KernelManagerImpl {
         ProgressBar.Instance.setProgressMessage('Starting Kernel', promise);
         return promise;
     }
+
     public getKernelSpecsFromJupyter(): Promise<Kernel.ISpecModels> {
         return this.getNotebook().then(nb => {
             if (!nb || nb.baseUrl.length === 0) {

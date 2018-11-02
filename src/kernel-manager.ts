@@ -1,23 +1,23 @@
-import * as vscode from 'vscode';
-import { EventEmitter } from 'events';
-import { formatErrorForLogging } from './common/utils';
-import { execPythonFileSync } from './common/procUtils';
-import { createDeferred } from './common/helpers';
 import { Kernel } from '@jupyterlab/services';
-import { LanguageProviders } from './common/languageProvider';
-import { MessageParser } from './jupyterServices/jupyter_client/resultParser';
-import { ParsedIOMessage } from './contracts';
+import { EventEmitter } from 'events';
 import * as Rx from 'rx';
+import * as semver from 'semver';
+import * as vscode from 'vscode';
+import { createDeferred } from './common/helpers';
+import { LanguageProviders } from './common/languageProvider';
+import { execPythonFileSync } from './common/procUtils';
+import { formatErrorForLogging } from './common/utils';
+import { ParsedIOMessage } from './contracts';
+import { MessageParser } from './jupyterServices/jupyter_client/resultParser';
 import { NotebookManager } from './jupyterServices/notebook/manager';
-import { ProgressBar } from './display/progressBar';
 import { JupyterClientAdapter } from "./pythonClient/jupyter_client/main";
-const semver = require('semver');
 
 export abstract class KernelManagerImpl extends EventEmitter {
     private _runningKernels: Map<string, Kernel.IKernel>;
     private _kernelSpecs: { [key: string]: Kernel.ISpecModel };
     protected _defaultKernel: string;
     private disposables: vscode.Disposable[];
+
     constructor(protected outputChannel: vscode.OutputChannel, protected notebookManager: NotebookManager, protected jupyterClient: JupyterClientAdapter) {
         super();
         this.disposables = [];
@@ -32,6 +32,7 @@ export abstract class KernelManagerImpl extends EventEmitter {
         });
         this._runningKernels.clear();
     }
+
     public setRunningKernelFor(language: string, kernel: Kernel.IKernel) {
         language = language.toLowerCase();
         this._runningKernels.set(language, kernel);
@@ -42,6 +43,7 @@ export abstract class KernelManagerImpl extends EventEmitter {
     public clearAllKernels() {
         this._runningKernels.clear();
     }
+
     public destroyRunningKernelFor(language: string): Promise<any> {
         language = language.toLowerCase();
         if (!this._runningKernels.has(language)) {
@@ -122,16 +124,18 @@ export abstract class KernelManagerImpl extends EventEmitter {
     }
 
     public abstract runCode(code: string, kernel: Kernel.IKernel, messageParser: MessageParser): Promise<any>;
+
     public runCodeAsObservable(code: string, kernel: Kernel.IKernel): Rx.Observable<ParsedIOMessage> {
         return null;
     }
+
     protected executeStartupCode(language: string, kernel: Kernel.IKernel): Promise<any> {
         let startupCode = LanguageProviders.getStartupCode(language);
         if (typeof startupCode !== 'string' || startupCode.length === 0) {
             return Promise.resolve();
         }
 
-        return this.runCode(startupCode, kernel, new MessageParser(this.outputChannel));
+        return this.runCode(startupCode, kernel, new MessageParser());
         // let def = createDeferred<any>();
         // let messageParser = new MessageParser(this.outputChannel);
         // let future: Kernel.IFuture;
@@ -232,6 +236,7 @@ export abstract class KernelManagerImpl extends EventEmitter {
                 return semver.gte(version, '4.3.0');
             });
     }
+
     public static jupyterVersionWorksWithJSServices(outputChannel: vscode.OutputChannel): Promise<boolean> {
         return execPythonFileSync('jupyter', ['notebook', '--version'], __dirname)
             .then(version => {

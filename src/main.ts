@@ -36,10 +36,10 @@ export class Jupyter extends Disposable {
     constructor(private outputChannel: OutputChannel) {
         super(() => { });
         this.disposables = [];
+        this.messageParser = new MessageParser();
+
         this.registerCommands();
         this.registerKernelCommands();
-        // TODO: ?
-        this.messageParser = new MessageParser(this.outputChannel);
         this.activate();
     }
 
@@ -64,8 +64,7 @@ export class Jupyter extends Disposable {
                 this.jupyterVersionWorksWithJSServices = yes;
                 if (yes) {
                     this.kernelManager = new Manager(this.outputChannel, this.notebookManager);
-                }
-                else {
+                } else {
                     const jupyterClient = new JupyterClientAdapter(this.outputChannel, workspace.rootPath);
                     this.kernelManager = new PyManager.Manager(this.outputChannel, this.notebookManager, jupyterClient);
                 }
@@ -76,16 +75,14 @@ export class Jupyter extends Disposable {
                 this.kernelManager.on('kernelChanged', (kernel: Kernel.IKernel, language: string) => {
                     this.onKernelChanged(kernel);
                 });
-            })
-            .catch(error => {
+            }).catch(error => {
                 this.kernelCreationPromise.reject(error);
                 throw error;
             });
     }
 
     private activate() {
-        // TODO: ?
-        this.notebookManager = new NotebookManager(this.outputChannel);
+        this.notebookManager = new NotebookManager();
 
         this.createKernelManager();
 
@@ -172,8 +169,7 @@ export class Jupyter extends Disposable {
                         return kernel;
                     });
                 }
-            })
-            .then(() => {
+            }).then(() => {
                 return this.executeAndDisplay(this.kernel, code).catch(reason => {
                     const message = typeof reason === 'string' ? reason : reason.message;
                     window.showErrorMessage(message);

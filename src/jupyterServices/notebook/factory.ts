@@ -1,24 +1,27 @@
-import { workspace, window, OutputChannel, Terminal, Disposable } from 'vscode';
-import { createDeferred } from '../../common/helpers';
-import { SystemVariables } from '../../common/systemVariables';
+import { ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
+import { Disposable, OutputChannel, window, workspace } from 'vscode';
+import { createDeferred } from '../../common/helpers';
+import { spanwPythonFile } from '../../common/procUtils';
+import { SystemVariables } from '../../common/systemVariables';
+import { ProgressBar } from '../../display/progressBar';
 import { Notebook } from './contracts';
 import { getAvailablePort } from './portUtils';
-import { getAvailableNotebooks, waitForNotebookToStart } from './utils';
-import { spawn, ChildProcess } from 'child_process';
-import { ProgressBar } from '../../display/progressBar';
-import { spanwPythonFile } from '../../common/procUtils';
+import { waitForNotebookToStart } from './utils';
 
 const tcpPortUsed = require('tcp-port-used');
 export class NotebookFactory extends EventEmitter {
     private proc: ChildProcess;
     private notebookOutputChannel: OutputChannel;
     private disposables: Disposable[] = [];
-    constructor(private outputChannel: OutputChannel) {
+    private _notebookUrlInfo: Notebook;
+
+    constructor() {
         super();
         this.notebookOutputChannel = window.createOutputChannel('Jupyter Notebook');
         this.disposables.push(this.notebookOutputChannel);
     }
+
     dispose() {
         this.disposables.forEach(d => {
             d.dispose();
@@ -26,7 +29,6 @@ export class NotebookFactory extends EventEmitter {
         this.disposables = [];
         this.shutdown();
     }
-    private _notebookUrlInfo: Notebook;
 
     canShutdown(url: string): boolean {
         if (!this._notebookUrlInfo) {
@@ -38,6 +40,7 @@ export class NotebookFactory extends EventEmitter {
         // Assuming we have '/' at the ends of the urls
         return ourUrl.indexOf(url) === 0 || url.indexOf(ourUrl) === 0;
     }
+
     shutdown() {
         if (this.proc) {
             try {
@@ -50,6 +53,7 @@ export class NotebookFactory extends EventEmitter {
         this.notebookOutputChannel.clear();
         this.emit('onShutdown');
     }
+
     private startJupyterNotebookInTerminal(startupFolder: string, args: string[]) {
         this.notebookOutputChannel.appendLine('Starting Jupyter Notebook');
         this.notebookOutputChannel.appendLine('jupyter ' + ['notebook'].concat(args).join(' '));
@@ -62,6 +66,7 @@ export class NotebookFactory extends EventEmitter {
                 });
             });
     }
+
     startNewNotebook(): Promise<Notebook> {
         this._notebookUrlInfo = null;
         this.notebookOutputChannel.clear();
@@ -71,6 +76,7 @@ export class NotebookFactory extends EventEmitter {
         ProgressBar.Instance.setProgressMessage('Starting Notebook', prom);
         return prom;
     }
+
     private startNotebook(): Promise<Notebook> {
         let sysVars = new SystemVariables();
         let jupyterSettings = workspace.getConfiguration('jupyter');
