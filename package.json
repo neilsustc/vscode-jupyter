@@ -1,340 +1,340 @@
 {
-  "name": "jupyter",
-  "displayName": "Jupyter",
-  "description": "Data Science with Jupyter on Visual Studio Code",
-  "version": "1.1.4",
-  "publisher": "donjayamanne",
-  "engines": {
-    "vscode": "^1.9.0"
-  },
-  "preview": true,
-  "keywords": [
-    "python",
-    "jupyter",
-    "ipython",
-    "data science"
-  ],
-  "author": {
-    "name": "Don Jayamanne",
-    "email": "don.jayamanne@yahoo.com"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/DonJayamanne/vscodeJupyter/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DonJayamanne/vscodeJupyter"
-  },
-  "bugs": {
-    "url": "https://github.com/DonJayamanne/vscodeJupyter/issues"
-  },
-  "icon": "images/icon.png",
-  "galleryBanner": {
-    "color": "#e46d2e",
-    "theme": "dark"
-  },
-  "categories": [
-    "Other"
-  ],
-  "recommendations": [
-    "donjayamanne.python"
-  ],
-  "activationEvents": [
-    "onLanguage:python",
-    "onLanguage:julia",
-    "onLanguage:lua",
-    "onLanguage:javascript",
-    "onLanguage:r",
-    "onCommand:jupyter.startNotebook",
-    "onCommand:jupyter.selectExistingNotebook",
-    "onCommand:jupyter.runSelectionLine",
-    "onCommand:jupyter.execCurrentCell",
-    "onCommand:jupyter.execCurrentCellAndAdvance",
-    "onCommand:jupyter.gotToPreviousCell",
-    "onCommand:jupyter.gotToNextCell",
-    "onCommand:jupyter.provideNotebookDetails"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "keybindings": [
-      {
-        "command": "jupyter.runSelectionLine",
-        "key": "ctrl+alt+enter",
-        "when": "editorFocus && !replaceActive && !searchViewletVisible && !findWidgetVisible"
-      },
-      {
-        "command": "jupyter.execCurrentCell",
-        "key": "ctrl+enter",
-        "when": "editorTextFocus && editorLangId == 'python' && jupyter.document.hasCodeCells && !replaceActive && !searchViewletVisible && !findWidgetVisible"
-      }
-    ],
-    "commands": [
-      {
-        "command": "jupyter.runSelectionLine",
-        "title": "Run Selection/Line",
-        "category": "Jupyter"
-      },
-      {
-        "command": "jupyter.execCurrentCell",
-        "title": "Run Cell",
-        "category": "Jupyter",
-        "when": "jupyter.document.hasCodeCells"
-      },
-      {
-        "command": "jupyter.execCurrentCellAndAdvance",
-        "title": "Run Cell and Advance",
-        "category": "Jupyter",
-        "when": "jupyter.document.hasCodeCells"
-      },
-      {
-        "command": "jupyter.gotToPreviousCell",
-        "title": "Go to Previous Cell",
-        "category": "Jupyter",
-        "when": " jupyter.document.hasCodeCells"
-      },
-      {
-        "command": "jupyter.gotToNextCell",
-        "title": "Go to Next Cell",
-        "category": "Jupyter",
-        "when": "jupyter.document.hasCodeCells"
-      },
-      {
-        "command": "jupyter.startNotebook",
-        "title": "Start a new Jupyter Notebook",
-        "category": "Jupyter"
-      },
-      {
-        "command": "jupyter.provideNotebookDetails",
-        "title": "Enter the url of local/remote Jupyter Notebook",
-        "category": "Jupyter"
-      },
-      {
-        "command": "jupyter.selectExistingNotebook",
-        "title": "Select an existing (local) Jupyter Notebook",
-        "category": "Jupyter"
-      }
-    ],
-    "menus": {
-      "commandPalette": [
-        {
-          "command": "jupyter.execCurrentCell",
-          "when": "jupyter.document.hasCodeCells"
-        },
-        {
-          "command": "jupyter.execCurrentCellAndAdvance",
-          "when": "jupyter.document.hasCodeCells"
-        },
-        {
-          "command": "jupyter.gotToPreviousCell",
-          "when": "jupyter.document.hasCodeCells"
-        },
-        {
-          "command": "jupyter.gotToNextCell",
-          "when": "jupyter.document.hasCodeCells"
-        }
-      ],
-      "editor/context": [
-        {
-          "command": "jupyter.runSelectionLine",
-          "title": "Run Selection/Line",
-          "group": "Jupyter"
-        },
-        {
-          "command": "jupyter.execCurrentCell",
-          "title": "Run Cell",
-          "group": "Jupyter",
-          "when": "jupyter.document.hasCodeCells"
-        },
-        {
-          "command": "jupyter.execCurrentCellAndAdvance",
-          "title": "Run Cell and Advance",
-          "group": "Jupyter",
-          "when": "jupyter.document.hasCodeCells"
-        },
-        {
-          "command": "jupyter.gotToPreviousCell",
-          "title": "Go to Previous Cell",
-          "category": "Jupyter",
-          "when": " jupyter.document.hasCodeCells"
-        },
-        {
-          "command": "jupyter.gotToNextCell",
-          "title": "Go to Next Cell",
-          "category": "Jupyter",
-          "when": "jupyter.document.hasCodeCells"
-        }
-      ]
+    "name": "jupyter",
+    "displayName": "Jupyter",
+    "description": "Data Science with Jupyter on Visual Studio Code",
+    "version": "1.1.4",
+    "publisher": "donjayamanne",
+    "engines": {
+        "vscode": "^1.9.0"
     },
-    "configuration": {
-      "type": "object",
-      "title": "Jupyter Configuration",
-      "properties": {
-        "jupyter.appendResults": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether to append the results to results window, else clear and display."
-        },
-        "jupyter.languages": {
-          "type": "array",
-          "description": "Default settings per language.",
-          "items": {
-            "type": "object",
-            "required": [
-              "languageId"
-            ],
-            "properties": {
-              "languageId": {
-                "type": "string",
-                "title": "Language Identifier",
-                "description": "Language Id (lower case). (Select Language on bottom of VS Code editor, and quick pick list will display language ids in brackets)"
-              },
-              "defaultKernel": {
-                "type": "string",
-                "title": "Defalt Kernel",
-                "description": "Default kernel for the corresponding language"
-              },
-              "cellIdentificationPattern": {
-                "type": "string",
-                "title": "",
-                "description": "Regular Expression pattern used to identify Jupyter Cells"
-              },
-              "startupCode": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "default": [],
-                "title": "Startup Code",
-                "description": "Code executed when the kernel starts. Such as '%matplotlib inline' for Python. Individual lines need to be placed as separate items of the array."
-              }
-            }
-          },
-          "default": [
+    "preview": true,
+    "keywords": [
+        "python",
+        "jupyter",
+        "ipython",
+        "data science"
+    ],
+    "author": {
+        "name": "Don Jayamanne",
+        "email": "don.jayamanne@yahoo.com"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/DonJayamanne/vscodeJupyter/",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DonJayamanne/vscodeJupyter"
+    },
+    "bugs": {
+        "url": "https://github.com/DonJayamanne/vscodeJupyter/issues"
+    },
+    "icon": "images/icon.png",
+    "galleryBanner": {
+        "color": "#e46d2e",
+        "theme": "dark"
+    },
+    "categories": [
+        "Other"
+    ],
+    "recommendations": [
+        "donjayamanne.python"
+    ],
+    "activationEvents": [
+        "onLanguage:python",
+        "onLanguage:julia",
+        "onLanguage:lua",
+        "onLanguage:javascript",
+        "onLanguage:r",
+        "onCommand:jupyter.startNotebook",
+        "onCommand:jupyter.selectExistingNotebook",
+        "onCommand:jupyter.runSelectionLine",
+        "onCommand:jupyter.execCurrentCell",
+        "onCommand:jupyter.execCurrentCellAndAdvance",
+        "onCommand:jupyter.gotToPreviousCell",
+        "onCommand:jupyter.gotToNextCell",
+        "onCommand:jupyter.provideNotebookDetails"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "keybindings": [
             {
-              "languageId": "python",
-              "startupCode": [
-                "%matplotlib inline"
-              ],
-              "cellIdentificationPattern": "^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])(.*)"
+                "command": "jupyter.runSelectionLine",
+                "key": "ctrl+alt+enter",
+                "when": "editorFocus && !replaceActive && !searchViewletVisible && !findWidgetVisible"
             },
             {
-              "languageId": "javascript",
-              "cellIdentificationPattern": "^(\\/\\/ %%|\\/\\/%%|\\/\\/ \\<codecell\\>|\\/\\/ In\\[\\d*?\\]|\\/\\/ In\\[ \\])(.*)"
+                "command": "jupyter.execCurrentCell",
+                "key": "ctrl+enter",
+                "when": "editorTextFocus && editorLangId == 'python' && jupyter.document.hasCodeCells && !replaceActive && !searchViewletVisible && !findWidgetVisible"
             }
-          ]
+        ],
+        "commands": [
+            {
+                "command": "jupyter.runSelectionLine",
+                "title": "Run Selection/Line",
+                "category": "Jupyter"
+            },
+            {
+                "command": "jupyter.execCurrentCell",
+                "title": "Run Cell",
+                "category": "Jupyter",
+                "when": "jupyter.document.hasCodeCells"
+            },
+            {
+                "command": "jupyter.execCurrentCellAndAdvance",
+                "title": "Run Cell and Advance",
+                "category": "Jupyter",
+                "when": "jupyter.document.hasCodeCells"
+            },
+            {
+                "command": "jupyter.gotToPreviousCell",
+                "title": "Go to Previous Cell",
+                "category": "Jupyter",
+                "when": " jupyter.document.hasCodeCells"
+            },
+            {
+                "command": "jupyter.gotToNextCell",
+                "title": "Go to Next Cell",
+                "category": "Jupyter",
+                "when": "jupyter.document.hasCodeCells"
+            },
+            {
+                "command": "jupyter.startNotebook",
+                "title": "Start a new Jupyter Notebook",
+                "category": "Jupyter"
+            },
+            {
+                "command": "jupyter.provideNotebookDetails",
+                "title": "Enter the url of local/remote Jupyter Notebook",
+                "category": "Jupyter"
+            },
+            {
+                "command": "jupyter.selectExistingNotebook",
+                "title": "Select an existing (local) Jupyter Notebook",
+                "category": "Jupyter"
+            }
+        ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "jupyter.execCurrentCell",
+                    "when": "jupyter.document.hasCodeCells"
+                },
+                {
+                    "command": "jupyter.execCurrentCellAndAdvance",
+                    "when": "jupyter.document.hasCodeCells"
+                },
+                {
+                    "command": "jupyter.gotToPreviousCell",
+                    "when": "jupyter.document.hasCodeCells"
+                },
+                {
+                    "command": "jupyter.gotToNextCell",
+                    "when": "jupyter.document.hasCodeCells"
+                }
+            ],
+            "editor/context": [
+                {
+                    "command": "jupyter.runSelectionLine",
+                    "title": "Run Selection/Line",
+                    "group": "Jupyter"
+                },
+                {
+                    "command": "jupyter.execCurrentCell",
+                    "title": "Run Cell",
+                    "group": "Jupyter",
+                    "when": "jupyter.document.hasCodeCells"
+                },
+                {
+                    "command": "jupyter.execCurrentCellAndAdvance",
+                    "title": "Run Cell and Advance",
+                    "group": "Jupyter",
+                    "when": "jupyter.document.hasCodeCells"
+                },
+                {
+                    "command": "jupyter.gotToPreviousCell",
+                    "title": "Go to Previous Cell",
+                    "category": "Jupyter",
+                    "when": " jupyter.document.hasCodeCells"
+                },
+                {
+                    "command": "jupyter.gotToNextCell",
+                    "title": "Go to Next Cell",
+                    "category": "Jupyter",
+                    "when": "jupyter.document.hasCodeCells"
+                }
+            ]
         },
-        "jupyter.notebook.startupFolder": {
-          "type": "string",
-          "default": "${workspaceRoot}",
-          "title": "Startup directory for Jupyter Notebook"
-        },
-        "jupyter.notebook.startupArgs": {
-          "type": "array",
-          "description": "'jupyter notebook' command line arguments. Each argument is a separate item in the array. For a full list type 'jupyter notebook --help' in a terminal window.",
-          "default": [
-            "--no-browser",
-            "--port=8888",
-            "--NotebookApp.allow_origin=\"*\""
-          ],
-          "items": {
-            "type": "string"
-          }
-        },
-        "jupyter.cellCodeLens.enabled": {
-          "type": "boolean",
-          "default": false
+        "configuration": {
+            "type": "object",
+            "title": "Jupyter Configuration",
+            "properties": {
+                "jupyter.appendResults": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to append the results to results window, else clear and display."
+                },
+                "jupyter.languages": {
+                    "type": "array",
+                    "description": "Default settings per language.",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "languageId"
+                        ],
+                        "properties": {
+                            "languageId": {
+                                "type": "string",
+                                "title": "Language Identifier",
+                                "description": "Language Id (lower case). (Select Language on bottom of VS Code editor, and quick pick list will display language ids in brackets)"
+                            },
+                            "defaultKernel": {
+                                "type": "string",
+                                "title": "Defalt Kernel",
+                                "description": "Default kernel for the corresponding language"
+                            },
+                            "cellIdentificationPattern": {
+                                "type": "string",
+                                "title": "",
+                                "description": "Regular Expression pattern used to identify Jupyter Cells"
+                            },
+                            "startupCode": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "default": [],
+                                "title": "Startup Code",
+                                "description": "Code executed when the kernel starts. Such as '%matplotlib inline' for Python. Individual lines need to be placed as separate items of the array."
+                            }
+                        }
+                    },
+                    "default": [
+                        {
+                            "languageId": "python",
+                            "startupCode": [
+                                "%matplotlib inline"
+                            ],
+                            "cellIdentificationPattern": "^(#\\s*%%|#\\s*\\<codecell\\>|#\\s*In\\[\\d*?\\]|#\\s*In\\[ \\])(.*)"
+                        },
+                        {
+                            "languageId": "javascript",
+                            "cellIdentificationPattern": "^(\\/\\/ %%|\\/\\/%%|\\/\\/ \\<codecell\\>|\\/\\/ In\\[\\d*?\\]|\\/\\/ In\\[ \\])(.*)"
+                        }
+                    ]
+                },
+                "jupyter.notebook.startupFolder": {
+                    "type": "string",
+                    "default": "${workspaceRoot}",
+                    "title": "Startup directory for Jupyter Notebook"
+                },
+                "jupyter.notebook.startupArgs": {
+                    "type": "array",
+                    "description": "'jupyter notebook' command line arguments. Each argument is a separate item in the array. For a full list type 'jupyter notebook --help' in a terminal window.",
+                    "default": [
+                        "--no-browser",
+                        "--port=8888",
+                        "--NotebookApp.allow_origin=\"*\""
+                    ],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "jupyter.cellCodeLens.enabled": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./ && webpack -p --colors",
+        "vscode:prepublishx": "tsc -p ./ && webpack -p --progress --colors",
+        "compilex": "webpack && tsc -watch -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test",
+        "testReact": "echo \"Error: no test specified\" && exit 1",
+        "startReact": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
+        "buildReact": "webpack -p --progress --colors",
+        "compileReact": "webpack -p --progress --colors --watch"
+    },
+    "devDependencies": {
+        "@types/body-parser": "0.0.34",
+        "@types/classnames": "0.0.32",
+        "@types/cors": "2.8.3",
+        "@types/express": "4.0.35",
+        "@types/mocha": "2.2.32",
+        "@types/node": "7.0.4",
+        "@types/query-string": "3.0.31",
+        "@types/react": "15.6.11",
+        "@types/react-dom": "0.14.23",
+        "@types/react-redux": "4.4.47",
+        "@types/react-router": "3.0.13",
+        "@types/react-router-redux": "4.0.51",
+        "@types/redux-actions": "1.2.8",
+        "@types/rx": "2.5.33",
+        "@types/socket.io": "1.4.31",
+        "@types/socket.io-client": "1.4.32",
+        "@types/uuid": "3.3.27",
+        "@types/webpack": "2.2.16",
+        "@types/webpack-env": "1.13.3",
+        "awesome-typescript-loader": "3.4.1",
+        "classnames": "2.2.5",
+        "copy-webpack-plugin": "4.3.1",
+        "css-loader": "0.26.4",
+        "extract-text-webpack-plugin": "2.1.2",
+        "file-loader": "0.10.1",
+        "html-loader": "0.4.5",
+        "html-webpack-plugin": "2.30.1",
+        "mocha": "2.3.3",
+        "postcss": "5.2.18",
+        "postcss-browser-reporter": "0.5.0",
+        "postcss-cssnext": "2.11.0",
+        "postcss-import": "9.1.0",
+        "postcss-loader": "1.3.3",
+        "postcss-reporter": "3.0.0",
+        "postcss-url": "5.1.2",
+        "query-string": "4.3.4",
+        "react": "15.6.2",
+        "react-dom": "15.6.2",
+        "react-hot-loader": "1.3.1",
+        "react-json-tree": "0.10.9",
+        "react-redux": "5.0.6",
+        "react-router": "3.2.0",
+        "react-router-redux": "4.0.8",
+        "redux": "3.7.2",
+        "redux-actions": "1.2.2",
+        "socket.io-client": "1.7.4",
+        "style-loader": "0.13.2",
+        "tslint": "4.5.1",
+        "typescript": "2.6.2",
+        "url-loader": "0.5.9",
+        "vscode": "1.1.10",
+        "webpack": "2.7.0",
+        "webpack-dev-server": "2.9.7",
+        "webpack-hot-middleware": "2.16.1"
+    },
+    "dependencies": {
+        "@jupyterlab/services": "0.34.3",
+        "anser": "1.4.6",
+        "body-parser": "1.18.2",
+        "cors": "2.8.4",
+        "ejs": "2.5.7",
+        "express": "4.16.2",
+        "immutable": "3.8.2",
+        "requirejs": "2.3.5",
+        "rx": "4.1.0",
+        "semver": "5.4.1",
+        "socket.io": "1.7.4",
+        "tcp-port-used": "0.1.2",
+        "tmp": "0.0.31",
+        "transformime": "3.2.1",
+        "transformime-marked": "0.0.1",
+        "transformime-react": "1.1.0",
+        "uint64be": "2.0.1",
+        "uniqid": "4.1.1",
+        "vscode-extension-telemetry": "0.0.5",
+        "ws": "2.3.1",
+        "xmlhttprequest": "1.8.0"
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "tsc -p ./ && webpack -p --colors",
-    "vscode:prepublishx": "tsc -p ./ && webpack -p --progress --colors",
-    "compilex": "webpack && tsc -watch -p ./",
-    "compile": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test",
-    "testReact": "echo \"Error: no test specified\" && exit 1",
-    "startReact": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3000 --open",
-    "buildReact": "webpack -p --progress --colors",
-    "compileReact": "webpack -p --progress --colors --watch"
-  },
-  "devDependencies": {
-    "@types/body-parser": "0.0.34",
-    "@types/classnames": "0.0.32",
-    "@types/cors": "2.8.3",
-    "@types/express": "4.0.35",
-    "@types/mocha": "2.2.32",
-    "@types/node": "7.0.4",
-    "@types/query-string": "3.0.31",
-    "@types/react": "15.6.11",
-    "@types/react-dom": "0.14.23",
-    "@types/react-redux": "4.4.47",
-    "@types/react-router": "3.0.13",
-    "@types/react-router-redux": "4.0.51",
-    "@types/redux-actions": "1.2.8",
-    "@types/rx": "2.5.33",
-    "@types/socket.io": "1.4.31",
-    "@types/socket.io-client": "1.4.32",
-    "@types/uuid": "3.3.27",
-    "@types/webpack": "2.2.16",
-    "@types/webpack-env": "1.13.3",
-    "awesome-typescript-loader": "3.4.1",
-    "classnames": "2.2.5",
-    "copy-webpack-plugin": "4.3.1",
-    "css-loader": "0.26.4",
-    "extract-text-webpack-plugin": "2.1.2",
-    "file-loader": "0.10.1",
-    "html-loader": "0.4.5",
-    "html-webpack-plugin": "2.30.1",
-    "mocha": "2.3.3",
-    "postcss": "5.2.18",
-    "postcss-browser-reporter": "0.5.0",
-    "postcss-cssnext": "2.11.0",
-    "postcss-import": "9.1.0",
-    "postcss-loader": "1.3.3",
-    "postcss-reporter": "3.0.0",
-    "postcss-url": "5.1.2",
-    "query-string": "4.3.4",
-    "react": "15.6.2",
-    "react-dom": "15.6.2",
-    "react-hot-loader": "1.3.1",
-    "react-json-tree": "0.10.9",
-    "react-redux": "5.0.6",
-    "react-router": "3.2.0",
-    "react-router-redux": "4.0.8",
-    "redux": "3.7.2",
-    "redux-actions": "1.2.2",
-    "socket.io-client": "1.7.4",
-    "style-loader": "0.13.2",
-    "tslint": "4.5.1",
-    "typescript": "2.6.2",
-    "url-loader": "0.5.9",
-    "vscode": "1.1.10",
-    "webpack": "2.7.0",
-    "webpack-dev-server": "2.9.7",
-    "webpack-hot-middleware": "2.16.1"
-  },
-  "dependencies": {
-    "@jupyterlab/services": "0.34.3",
-    "anser": "1.4.6",
-    "body-parser": "1.18.2",
-    "cors": "2.8.4",
-    "ejs": "2.5.7",
-    "express": "4.16.2",
-    "immutable": "3.8.2",
-    "requirejs": "2.3.5",
-    "rx": "4.1.0",
-    "semver": "5.4.1",
-    "socket.io": "1.7.4",
-    "tcp-port-used": "0.1.2",
-    "tmp": "0.0.31",
-    "transformime": "3.2.1",
-    "transformime-marked": "0.0.1",
-    "transformime-react": "1.1.0",
-    "uint64be": "2.0.1",
-    "uniqid": "4.1.1",
-    "vscode-extension-telemetry": "0.0.5",
-    "ws": "2.3.1",
-    "xmlhttprequest": "1.8.0"
-  }
 }

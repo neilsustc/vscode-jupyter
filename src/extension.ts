@@ -1,9 +1,8 @@
 'use strict';
+
 import * as vscode from 'vscode';
-import { Jupyter } from './main';
 import { LanguageProvider, LanguageProviders } from './common/languageProvider';
-import { sendTelemetryEvent } from './telemetry/main';
-import { EVENT_LOAD } from './telemetry/contracts';
+import { Jupyter } from './main';
 
 // Required by @jupyter/services
 (global as any).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -11,18 +10,20 @@ import { EVENT_LOAD } from './telemetry/contracts';
 (global as any).WebSocket = require('ws');
 
 export function activate(context: vscode.ExtensionContext) {
-    sendTelemetryEvent(EVENT_LOAD);
-    let outputChannel = vscode.window.createOutputChannel('Jupyter');
-    context.subscriptions.push(outputChannel);
+    // sendTelemetryEvent(EVENT_LOAD);
 
+    let outputChannel = vscode.window.createOutputChannel('Jupyter');
+    // TODO: ?
     let jupyter = new Jupyter(outputChannel);
-    context.subscriptions.push(jupyter);
+
+    context.subscriptions.push(outputChannel, jupyter);
 
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor) {
         jupyter.hasCodeCells(activeEditor.document, null);
     }
 
+    // TODO: ?
     return {
         registerLanguageProvider: (language: string, provider: LanguageProvider) => {
             LanguageProviders.registerLanguageProvider(language, provider);
@@ -33,5 +34,4 @@ export function activate(context: vscode.ExtensionContext) {
     };
 }
 
-export function deactivate() {
-}
+export function deactivate() { }
