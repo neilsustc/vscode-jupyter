@@ -1,19 +1,22 @@
-import * as io from 'socket.io';
-import * as http from 'http';
-import { createDeferred, Deferred } from '../common/helpers';
+import * as cors from 'cors';
 import { EventEmitter } from 'events';
 import * as express from 'express';
 import { Express, Request, Response } from 'express';
+import * as http from 'http';
 import * as path from 'path';
-import * as cors from 'cors';
+import * as io from 'socket.io';
+import * as uniqid from 'uniqid';
 import * as vscode from 'vscode';
+import { createDeferred, Deferred } from '../common/helpers';
 
-const uniqid = require('uniqid');
 export class Server extends EventEmitter {
     private server: SocketIO.Server;
     private app: Express;
     private httpServer: http.Server;
     private clients: SocketIO.Socket[] = [];
+    private port: number;
+    private responsePromises: Map<string, Deferred<boolean>>;
+
     constructor() {
         super();
         this.responsePromises = new Map<string, Deferred<boolean>>();
@@ -32,7 +35,6 @@ export class Server extends EventEmitter {
         }
     }
 
-    private port: number;
     public start(): Promise<number> {
         if (this.port) {
             return Promise.resolve(this.port);
@@ -70,11 +72,12 @@ export class Server extends EventEmitter {
         this.server.on('connection', this.onSocketConnection.bind(this));
         return def.promise;
     }
+
     public rootRequestHandler(req: Request, res: Response) {
         let theme: string = req.query.theme;
         let backgroundColor: string = req.query.backgroundcolor;
         let color: string = req.query.color;
-        let editorConfig = vscode.workspace.getConfiguration('editor');
+        let editorConfig = vscode.workspace.getConfiguration('editor', null);
         let fontFamily = editorConfig.get<string>('fontFamily').split('\'').join('').split('"').join('');
         let fontSize = editorConfig.get<number>('fontSize') + 'px';
         let fontWeight = editorConfig.get<string>('fontWeight');
@@ -89,10 +92,13 @@ export class Server extends EventEmitter {
             }
         );
     }
+
     private buffer: any[] = [];
+
     public clearBuffer() {
         this.buffer = [];
     }
+
     public sendResults(data: any[]) {
         // Add an id to each item (poor separation of concerns... but what ever)
         let results = data.map(item => { return { id: uniqid('x'), value: item }; });
@@ -103,6 +109,7 @@ export class Server extends EventEmitter {
     public sendSetting(name: string, value: any) {
         this.broadcast(name, value);
     }
+
     private broadcast(eventName: string, data: any) {
         this.server.emit(eventName, data);
     }
@@ -141,7 +148,6 @@ export class Server extends EventEmitter {
         socket.emit('results', this.buffer);
     }
 
-    private responsePromises: Map<string, Deferred<boolean>>;
     public clientsConnected(timeoutMilliSeconds: number): Promise<any> {
         const id = new Date().getTime().toString();
         const def = createDeferred<boolean>();

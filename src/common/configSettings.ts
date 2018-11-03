@@ -1,10 +1,10 @@
 'use strict';
 
-import * as vscode from 'vscode';
-import { SystemVariables } from './systemVariables';
+import * as child_process from 'child_process';
 import { EventEmitter } from 'events';
 import * as path from 'path';
-import * as child_process from 'child_process';
+import * as vscode from 'vscode';
+import { SystemVariables } from './systemVariables';
 
 export const IS_WINDOWS = /^win/.test(process.platform);
 
@@ -18,6 +18,10 @@ const IS_TEST_EXECUTION = process.env['PYTHON_DONJAYAMANNE_TEST'] === '1';
 export class PythonSettings extends EventEmitter implements IPythonSettings {
     private static pythonSettings: PythonSettings = new PythonSettings();
     private disposables: vscode.Disposable[] = [];
+    private _pythonPath: string;
+
+    public envFile: string;
+
     constructor() {
         super();
         if (PythonSettings.pythonSettings) {
@@ -29,23 +33,25 @@ export class PythonSettings extends EventEmitter implements IPythonSettings {
 
         this.initializeSettings();
     }
+
     public static getInstance(): PythonSettings {
         return PythonSettings.pythonSettings;
     }
+
     private initializeSettings() {
         const systemVariables: SystemVariables = new SystemVariables();
         const workspaceRoot = (IS_TEST_EXECUTION || typeof vscode.workspace.rootPath !== 'string') ? __dirname : vscode.workspace.rootPath;
-        let pythonSettings = vscode.workspace.getConfiguration('python');
+        let pythonSettings = vscode.workspace.getConfiguration('python', null);
         this.pythonPath = systemVariables.resolveAny(pythonSettings.get<string>('pythonPath'));
         this.pythonPath = getAbsolutePath(this.pythonPath, IS_TEST_EXECUTION ? __dirname : workspaceRoot);
         this.envFile = systemVariables.resolveAny(pythonSettings.get<string>('envFile'));
         this.emit('change');
     }
 
-    private _pythonPath: string;
     public get pythonPath(): string {
         return this._pythonPath;
     }
+
     public set pythonPath(value: string) {
         if (this._pythonPath === value) {
             return;
@@ -59,7 +65,6 @@ export class PythonSettings extends EventEmitter implements IPythonSettings {
             this._pythonPath = value;
         }
     }
-    public envFile: string;
 }
 
 function getAbsolutePath(pathToCheck: string, rootDir: string): string {
