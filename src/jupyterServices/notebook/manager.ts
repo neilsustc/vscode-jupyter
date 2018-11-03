@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 import { Disposable, window, workspace } from 'vscode';
 import { createDeferred } from '../../common/helpers';
+import { SystemVariables } from '../../common/systemVariables';
 import { Notebook } from './contracts';
 import { NotebookFactory } from './factory';
 import { getAvailableNotebooks } from './utils';
-import { SystemVariables } from '../../common/systemVariables';
 
 export { Notebook } from './contracts';
 export { inputNotebookDetails, selectExistingNotebook } from './utils';
@@ -69,40 +69,38 @@ export class NotebookManager extends EventEmitter {
             startupFolder = startupFolder[0].toUpperCase() + startupFolder.substring(1);
         }
 
-        // TODO: make QuickPickItems to be Thenable<>
-        getAvailableNotebooks()
-            .then(notebooks => {
-                let nbItems = notebooks.map(nb => {
-                    let details = nb.startupFolder && nb.startupFolder.length > 0 ? `Working directory: ${nb.startupFolder}` : '';
-                    return {
-                        label: strSelectExisting,
-                        description: nb.baseUrl,
-                        detail: details,
-                        notebook: nb
-                    };
-                });
-                window.showQuickPick([
-                    ...nbItems,
-                    {
-                        label: strStartNew,
-                        description: '',
-                        detail: `at ${startupFolder}`,
-                        notebook: undefined
-                    }
-                ]).then(item => {
-                    if (!item) {
-                        deferred.resolve();
-                    } else {
-                        if (item.label === strStartNew) {
-                            this.factory.startNewNotebook()
-                                .then(deferred.resolve.bind(deferred))
-                                .catch(deferred.reject.bind(deferred));
-                        } else {
-                            deferred.resolve(item.notebook);
-                        }
-                    }
-                });
+        let nbItems: Thenable<{ label: string, description: string, details?: string, notebook?: Notebook }[]> = getAvailableNotebooks().then(nbs => {
+            let newNbItem = {
+                label: strStartNew,
+                description: '',
+                detail: `at ${startupFolder}`,
+                notebook: undefined
+            }
+            let existingNbItems = nbs.map(nb => {
+                let details = nb.startupFolder && nb.startupFolder.length > 0 ? `Working directory: ${nb.startupFolder}` : '';
+                return {
+                    label: strSelectExisting,
+                    description: nb.baseUrl,
+                    detail: details,
+                    notebook: nb
+                };
             });
+            return [...existingNbItems, newNbItem];
+        });
+
+        window.showQuickPick(nbItems).then(item => {
+            if (!item) {
+                deferred.resolve();
+            } else {
+                if (item.label === strStartNew) {
+                    this.factory.startNewNotebook()
+                        .then(deferred.resolve.bind(deferred))
+                        .catch(deferred.reject.bind(deferred));
+                } else {
+                    deferred.resolve(item.notebook);
+                }
+            }
+        });
 
         deferred.promise.then(nb => {
             this._currentNotebook = nb;
