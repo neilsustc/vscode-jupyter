@@ -106,10 +106,6 @@ export class Server extends EventEmitter {
         this.broadcast('results', results);
     }
 
-    public sendSetting(name: string, value: any) {
-        this.broadcast(name, value);
-    }
-
     private broadcast(eventName: string, data: any) {
         this.server.emit(eventName, data);
     }
@@ -133,8 +129,8 @@ export class Server extends EventEmitter {
             this.responsePromises.delete(data.id);
             def.resolve(true);
         });
-        socket.on('settings.appendResults', (data: any) => {
-            this.emit('settings.appendResults', data);
+        socket.on('vscode.settings.updateAppendResults', (data: any) => {
+            this.emit('vscode.settings.updateAppendResults', data);
         });
         socket.on('clearResults', () => {
             this.buffer = [];

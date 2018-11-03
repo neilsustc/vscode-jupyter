@@ -1,17 +1,17 @@
-import * as vscode from 'vscode';
-import { KernelPicker } from './kernelPicker';
-import { Commands } from '../common/constants';
-import { TextDocumentContentProvider } from './resultView';
-import { CellOptions } from './cellOptions';
-import { JupyterCodeLensProvider } from '../editorIntegration/codeLensProvider';
-import { Server } from './server';
-import { ParsedIOMessage } from '../contracts';
-import { createDeferred } from '../common/helpers';
 import { Kernel } from '@jupyterlab/services';
-import { Notebook } from '../jupyterServices/notebook/contracts';
+import * as vscode from 'vscode';
+import { Commands } from '../common/constants';
+import { createDeferred } from '../common/helpers';
 import { formatErrorForLogging } from '../common/utils';
+import { ParsedIOMessage } from '../contracts';
+import { JupyterCodeLensProvider } from '../editorIntegration/codeLensProvider';
+import { Notebook } from '../jupyterServices/notebook/contracts';
+import { CellOptions } from './cellOptions';
+import { KernelPicker } from './kernelPicker';
+import { TextDocumentContentProvider } from './resultView';
+import { Server } from './server';
 
-export { ProgressBar } from './progressBar'
+export { ProgressBar } from './progressBar';
 
 const jupyterSchema = 'jupyter-result-viewer';
 const previewUri = vscode.Uri.parse(jupyterSchema + '://authority/jupyter');
@@ -21,6 +21,10 @@ export class JupyterDisplay extends vscode.Disposable {
     private previewWindow: TextDocumentContentProvider;
     private cellOptions: CellOptions;
     private server: Server;
+    private clientConnected: boolean;
+    private notebookUrl: string;
+    private canShutdown: boolean;
+
     constructor(cellCodeLenses: JupyterCodeLensProvider, private outputChannel: vscode.OutputChannel) {
         super(() => { });
         this.disposables = [];
@@ -32,10 +36,12 @@ export class JupyterDisplay extends vscode.Disposable {
         this.disposables.push(vscode.workspace.registerTextDocumentContentProvider(jupyterSchema, this.previewWindow));
         this.cellOptions = new CellOptions(cellCodeLenses);
         this.disposables.push(this.cellOptions);
-        this.server.on('settings.appendResults', append => {
+        this.server.on('vscode.settings.updateAppendResults', append => {
             vscode.workspace.getConfiguration('jupyter').update('appendResults', append, true)
                 .then(() => {
-                    this.server.sendSetting('settings.appendResults', this.appendResults);
+                    // TODO: Need a better event name
+                    // Is it needed?
+                    // this.server.emit('view.appendResults', this.appendResults);
                 }, reason => {
                     this.outputChannel.appendLine(formatErrorForLogging(reason));
                     vscode.window.showErrorMessage('Failed to update the setting', 'View Errors')
@@ -48,20 +54,19 @@ export class JupyterDisplay extends vscode.Disposable {
         });
         this.server.on('connected', () => {
             this.clientConnected = true;
-            this.server.sendSetting('settings.appendResults', this.appendResults);
+            // this.server.emit('view.appendResults', this.appendResults);
         });
     }
 
-    private clientConnected: boolean;
     private get appendResults(): boolean {
         return vscode.workspace.getConfiguration('jupyter').get<boolean>('appendResults', true);
     }
-    private notebookUrl: string;
-    private canShutdown: boolean;
+
     public setNotebook(nb: Notebook, canShutdown: boolean) {
         this.notebookUrl = (nb && nb.baseUrl) || '';
         this.canShutdown = canShutdown;
     }
+
     public showResults(results: Rx.Observable<ParsedIOMessage>): Promise<any> {
         return this.server.start().then(port => {
             this.previewWindow.ServerPort = port;
