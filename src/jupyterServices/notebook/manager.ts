@@ -77,7 +77,7 @@ export class NotebookManager extends EventEmitter {
                 notebook: undefined
             }
             let existingNbItems = nbs.map(nb => {
-                let details = nb.startupFolder && nb.startupFolder.length > 0 ? `Working directory: ${nb.startupFolder}` : '';
+                let details = nb.startupFolder && nb.startupFolder.length > 0 ? `at ${nb.startupFolder}` : '';
                 return {
                     label: strSelectExisting,
                     description: nb.baseUrl,
@@ -88,7 +88,7 @@ export class NotebookManager extends EventEmitter {
             return [...existingNbItems, newNbItem];
         });
 
-        window.showQuickPick(nbItems).then(item => {
+        window.showQuickPick(nbItems, {placeHolder: 'Select/Start a notebook'}).then(item => {
             if (!item) {
                 deferred.resolve();
             } else {
