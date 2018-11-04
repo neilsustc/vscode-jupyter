@@ -1,49 +1,32 @@
 {
-    "name": "jupyter",
+    "name": "vscode-jupyter",
     "displayName": "Jupyter",
     "description": "Data Science with Jupyter on Visual Studio Code",
-    "version": "1.1.4",
-    "publisher": "donjayamanne",
+    "version": "1.0.0",
+    "publisher": "yzhang",
     "engines": {
         "vscode": "^1.29.0"
     },
-    "preview": true,
     "keywords": [
         "python",
         "jupyter",
         "ipython",
         "data science"
     ],
-    "author": {
-        "name": "Don Jayamanne",
-        "email": "don.jayamanne@yahoo.com"
-    },
     "license": "MIT",
-    "homepage": "https://github.com/DonJayamanne/vscodeJupyter/",
     "repository": {
         "type": "git",
-        "url": "https://github.com/DonJayamanne/vscodeJupyter"
+        "url": "https://github.com/neilsustc/vscode-jupyter"
     },
     "bugs": {
-        "url": "https://github.com/DonJayamanne/vscodeJupyter/issues"
+        "url": "https://github.com/neilsustc/vscode-jupyter/issues"
     },
-    "icon": "images/icon.png",
-    "galleryBanner": {
-        "color": "#e46d2e",
-        "theme": "dark"
-    },
+    "icon": "images/logo.png",
     "categories": [
         "Other"
     ],
-    "recommendations": [
-        "donjayamanne.python"
-    ],
     "activationEvents": [
         "onLanguage:python",
-        "onLanguage:julia",
-        "onLanguage:lua",
-        "onLanguage:javascript",
-        "onLanguage:r",
         "onCommand:jupyter.startNotebook",
         "onCommand:jupyter.selectExistingNotebook",
         "onCommand:jupyter.runSelectionLine",

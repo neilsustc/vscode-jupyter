@@ -1,17 +1,21 @@
-Forked from [DonJayamanne/vscodeJupyter](https://github.com/DonJayamanne/vscodeJupyter)
+# Jupyter
 
----
+[![AppVeyor](https://img.shields.io/appveyor/ci/neilsustc/vscode-jupyter.svg?style=flat-square&label=appveyor%20build)](https://ci.appveyor.com/project/neilsustc/vscode-jupyter/build/artifacts)
 
-Download it → [![AppVeyor](https://img.shields.io/appveyor/ci/neilsustc/vscode-jupyter.svg?style=flat-square&label=appveyor%20build)](https://ci.appveyor.com/project/neilsustc/vscode-jupyter/build/artifacts)
+Click above badge to download the latest `.vsix`
 
-- Built with the latest commit
-    - [PR#97](https://github.com/DonJayamanne/vscodeJupyter/pull/97): Scroll to bottom when appending results
+## Features
+
+In addition to the [Jupyter extension by DonJayamanne](https://marketplace.visualstudio.com/items?itemName=donjayamanne.jupyter), we have
+
+- Auto scrolling to bottom when showing results ([DonJayamanne/vscodeJupyter#97](https://github.com/DonJayamanne/vscodeJupyter/pull/97))
+
 - Default keybinding
     - <kbd>Ctrl</kbd> + <kbd>Enter</kbd> for `execCurrentCell`
-- UI improvements
-    - Floated "Clear Results" button
-    - Many details [PR#92](https://github.com/DonJayamanne/vscodeJupyter/pull/92)
-- New option `jupyter.codelens.enabled`
+
+- Many UI improvements
+
+- New option `jupyter.codelens.enabled` (default `false`)
 
 ![demo](images/demo.gif)
 
@@ -36,3 +40,9 @@ Recommend [Highlight](https://marketplace.visualstudio.com/items?itemName=fabios
     }
 }
 ```
+
+## Others
+
+Forked from [DonJayamanne/vscodeJupyter](https://github.com/DonJayamanne/vscodeJupyter)
+
+Extension logo from [jupyter/design](https://github.com/jupyter/design).
