@@ -76,21 +76,17 @@ export class Server extends EventEmitter {
     }
 
     public rootRequestHandler(req: Request, res: Response) {
-        let theme: string = req.query.theme;
         let backgroundColor: string = req.query.backgroundcolor;
         let color: string = req.query.color;
         let editorConfig = vscode.workspace.getConfiguration('editor', null);
-        let fontFamily = editorConfig.get<string>('fontFamily').split('\'').join('').split('"').join('');
-        let fontSize = editorConfig.get<number>('fontSize') + 'px';
-        let fontWeight = editorConfig.get<string>('fontWeight');
+        let editorFontFamily = editorConfig.get<String>('fontFamily');
+        let editorFontSize = editorConfig.get<Number>('fontSize');
 
         res.send(this.getResultsPage({
-            theme: theme,
             backgroundColor: backgroundColor,
             color: color,
-            fontFamily: fontFamily,
-            fontSize: fontSize,
-            fontWeight: fontWeight
+            editorFontFamily: editorFontFamily,
+            editorFontSize: editorFontSize
         }));
     }
 
@@ -177,21 +173,16 @@ export class Server extends EventEmitter {
                 <title>Jupyter Notebook</title>
                 <style>
                     :root {
-                        --background-color: ${values.backgroundColor};
-                        --color: ${values.color};
-                        --font-family: ${values.fontFamily};
-                        --font-weight: ${values.fontWeight};
-                        --font-size: ${values.fontSize};
+                        --editor-font-family: ${values.editorFontFamily};
+                        --editor-font-size: ${values.editorFontSize}px;
                     }
-            
+
                     body {
                         background-color: ${values.backgroundColor};
                         color: ${values.color};
-                        font-family: ${values.fontFamily};
-                        font-weight: ${values.fontWeight};
-                        font-size: ${values.fontSize};
                     }
                 </style>
+                <link rel="stylesheet" type="text/css" href="/main.css" />
                 ${values.theme === 'vscode-light'
                 ? '<link rel="stylesheet" type="text/css" href="/color-theme-light.css" />'
                 : '<link rel="stylesheet" type="text/css" href="/color-theme-dark.css" />'}

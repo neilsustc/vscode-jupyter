@@ -87,7 +87,9 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin([
             { from: 'color-theme-dark.css' },
-            { from: 'color-theme-light.css' }
+            { from: 'color-theme-light.css' },
+            { from: 'main.css' },
+            { from: 'clear_output_inverse.svg' }
         ]),
         new webpack.LoaderOptionsPlugin({
             options: {

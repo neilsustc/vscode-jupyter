@@ -33,10 +33,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         style={{ verticalAlign: 'middle' }}
                         checked={this.props.appendResults}
                         onChange={() => this.props.toggleAppendResults()} />
-                    Append Results
+                    <span>append results</span>
                 </label>
                 &nbsp;
-                <button onClick={() => this.props.clearResults()}>Clear Results</button>
+                <button className={'clear-output'}
+                    style={{ verticalAlign: 'middle' }}
+                    title={'clear output'}
+                    onClick={() => this.props.clearResults()}></button>
             </header>
         );
     }
