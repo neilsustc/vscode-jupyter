@@ -39,6 +39,7 @@ export class Server extends EventEmitter {
         if (this.port) {
             return Promise.resolve(this.port);
         }
+
         let def = createDeferred<number>();
 
         this.app = express();
@@ -60,6 +61,7 @@ export class Server extends EventEmitter {
 
         this.httpServer.listen(0, () => {
             this.port = this.httpServer.address().port;
+            console.log('port', this.port);
             def.resolve(this.port);
             def = null;
         });
@@ -81,16 +83,15 @@ export class Server extends EventEmitter {
         let fontFamily = editorConfig.get<string>('fontFamily').split('\'').join('').split('"').join('');
         let fontSize = editorConfig.get<number>('fontSize') + 'px';
         let fontWeight = editorConfig.get<string>('fontWeight');
-        res.render(path.join(__dirname, '..', '..', 'browser', "index.ejs"),
-            {
-                theme: theme,
-                backgroundColor: backgroundColor,
-                color: color,
-                fontFamily: fontFamily,
-                fontSize: fontSize,
-                fontWeight: fontWeight
-            }
-        );
+
+        res.send(this.getResultsPage({
+            theme: theme,
+            backgroundColor: backgroundColor,
+            color: color,
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            fontWeight: fontWeight
+        }));
     }
 
     private buffer: any[] = [];
@@ -112,12 +113,14 @@ export class Server extends EventEmitter {
 
     private onSocketConnection(socket: SocketIO.Socket) {
         this.clients.push(socket);
+
         socket.on('disconnect', () => {
             const index = this.clients.findIndex(sock => sock.id === socket.id);
             if (index >= 0) {
                 this.clients.splice(index, 1);
             }
         });
+
         socket.on('clientExists', (data: { id: string }) => {
             console.log('clientExists, on server');
             console.log(data);
@@ -129,15 +132,19 @@ export class Server extends EventEmitter {
             this.responsePromises.delete(data.id);
             def.resolve(true);
         });
+
         socket.on('vscode.settings.updateAppendResults', (data: any) => {
             this.emit('vscode.settings.updateAppendResults', data);
         });
+
         socket.on('clearResults', () => {
             this.buffer = [];
         });
+
         socket.on('results.ack', () => {
             this.buffer = [];
         });
+
         this.emit('connected');
 
         // Someone is connected, send them the data we have
@@ -159,5 +166,45 @@ export class Server extends EventEmitter {
         }, timeoutMilliSeconds);
 
         return def.promise;
+    }
+
+    private getResultsPage(values) {
+        return `<!doctype html>
+            <html>
+            
+            <head>
+                <meta charset="utf-8">
+                <title>Jupyter Notebook</title>
+                <style>
+                    :root {
+                        --background-color: ${values.backgroundColor};
+                        --color: ${values.color};
+                        --font-family: ${values.fontFamily};
+                        --font-weight: ${values.fontWeight};
+                        --font-size: ${values.fontSize};
+                    }
+            
+                    body {
+                        background-color: ${values.backgroundColor};
+                        color: ${values.color};
+                        font-family: ${values.fontFamily};
+                        font-weight: ${values.fontWeight};
+                        font-size: ${values.fontSize};
+                    }
+                </style>
+                ${values.theme === 'vscode-light'
+                ? '<link rel="stylesheet" type="text/css" href="/color-theme-light.css" />'
+                : '<link rel="stylesheet" type="text/css" href="/color-theme-dark.css" />'}
+            </head>
+            
+            <body>
+                <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+                <div id="root"></div>
+                <!-- Should be after div#root -->
+                <script type="text/javascript" src="/vendor.bundle.js"></script>
+                <script type="text/javascript" src="/bundle.js"></script>
+            </body>
+            
+            </html>`;
     }
 }
