@@ -9,7 +9,8 @@ export class KernelStatus extends vscode.Disposable {
     constructor() {
         super(() => { });
         this.disposables = [];
-        this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+        // Try placing it right to Python interpreter selector
+        this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, -1);
         this.statusBar.command = 'jupyter.proxyKernelOptionsCmd';
         this.disposables.push(this.statusBar);
         this.disposables.push(vscode.commands.registerCommand('jupyter.proxyKernelOptionsCmd', () => {
@@ -43,13 +44,13 @@ export class KernelStatus extends vscode.Disposable {
             this.statusBar.tooltip = `${spec.display_name}(${spec.name}) Kernel for ${spec.language}` +
                 `\nRunning on ${kernel.baseUrl}\nClick for options`;
             this.displayName = spec.display_name;
-            this.statusBar.text = `$(flame)${this.displayName} Kernel`;
+            this.statusBar.text = `$(flame) ${this.displayName} Kernel`;
         });
-        this.statusBar.text = `$(flame)${this.displayName} Kernel`;
+        this.statusBar.text = `$(flame) ${this.displayName} Kernel`;
         this.statusBar.show();
     }
     public setKernelStatus(status: string) {
-        this.statusBar.text = `$(flame)${this.displayName} Kernel (${status})`;
+        this.statusBar.text = `$(flame) ${this.displayName} Kernel (${status})`;
     }
     public dispose() {
         this.disposables.forEach(d => d.dispose());

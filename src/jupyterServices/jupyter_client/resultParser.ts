@@ -1,24 +1,21 @@
 "use strict";
 
+import { KernelMessage } from '@jupyterlab/services';
 import { EventEmitter } from "events";
 import * as Rx from 'rx';
-import { OutputChannel } from 'vscode';
-import { KernelMessage } from '@jupyterlab/services';
-import { ParsedIOMessage } from '../../contracts';
 import { Helpers } from '../../common/helpers';
-
+import { ParsedIOMessage } from '../../contracts';
 
 export class MessageParser extends EventEmitter {
-    constructor(private outputChannel: OutputChannel) {
+    constructor() {
         super();
     }
+
     public processResponse(message: KernelMessage.IIOPubMessage, observer?: Rx.Observer<ParsedIOMessage>) {
-        if (!message) {
+        if (!message || !Helpers.isValidMessag(message)) {
             return;
         }
-        if (!Helpers.isValidMessag(message)) {
-            return;
-        }
+
         try {
             const msg_type = message.header.msg_type;
             if (msg_type === 'status') {
@@ -28,6 +25,7 @@ export class MessageParser extends EventEmitter {
             if (!msg_id) {
                 return;
             }
+
             const status = (message.content as any).status;
             let parsedMesage: ParsedIOMessage;
             switch (status) {
@@ -55,15 +53,16 @@ export class MessageParser extends EventEmitter {
                     }
                 }
             }
+
             if (!parsedMesage) {
                 parsedMesage = Helpers.parseIOMessage(message);
             }
             if (!parsedMesage || !observer) {
                 return;
             }
+
             observer.onNext(parsedMesage);
-        }
-        catch (ex) {
+        } catch (ex) {
             this.emit('shellmessagepareerror', ex, JSON.stringify(message));
         }
     }

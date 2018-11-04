@@ -1,107 +1,90 @@
 import * as React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { RootState } from '../../reducers';
+import { bindActionCreators } from 'redux';
+import 'socket.io-client';
 import * as ResultActions from '../../actions/results';
 import Header from '../../components/Header';
-import ResultList from '../../components/ResultList'
-import * as style from './style.css';
-
-import * as io from 'socket.io-client';
-import { VariableMap } from '../../reducers/variables';
-import VariableList from '../../components/Variables';
-
-import * as Actions from '../../constants/resultActions';
+import ResultList from '../../components/ResultList';
+import { RootState } from '../../reducers';
 
 interface AppProps {
-  settings: NotebookResultSettings;
-  resultActions: typeof ResultActions;
-  results: NotebookResultsState;
-  variables: VariableMap,
-  toggleVariables: () => void;
+    settings: NotebookResultSettings;
+    resultActions: typeof ResultActions;
+    results: NotebookResultsState;
 };
 
 interface AppState {
-  /* empty */
+    /* empty */
 }
 
 class App extends React.Component<AppProps, AppState>{
-  private socket: SocketIOClient.Socket;
-  constructor(props?: AppProps, context?: any) {
-    super(props, context)
-    // Use io (object) available in the script
-    this.socket = (window as any).io();
-    this.socket.on('connect', () => {
-      // Do nothing
-    });
-    this.socket.on('settings.appendResults', (value: any) => {
-      this.props.resultActions.setAppendResults(value);
-    });
-    this.socket.on('clientExists', (data: any) => {
-      this.socket.emit('clientExists', { id: data.id });
-    });
-    this.socket.on('results', (value: NotebookOutput[]) => {
-      if (!this.props.settings.appendResults) {
-        this.props.resultActions.clearResults();
-      }
-      this.socket.emit('results.ack');
-      this.props.resultActions.addResults(value);
-      window.scrollTo(0, document.body.scrollHeight);
-    });
-    this.socket.on('variable', (value: NotebookOutput[]) => {
-      this.socket.emit('results.ack');
-      this.props.resultActions.addVariable(value);
-    });
-  }
+    private socket: SocketIOClient.Socket;
 
-  toggleAppendResults = () => {
-    this.socket.emit('settings.appendResults', !this.props.settings.appendResults);
-  }
-  toggleVariable = (name: string) => {
-    this.socket.emit('settings.showVariable', { [name]: !!!this.props.settings.toggledVariables[name] });
-  }
-  private clearResults() {
-    this.socket.emit('clearResults');
-    this.props.resultActions.clearResults();
-  }
-  render() {
-    const { children, variables, resultActions, settings } = this.props;
-    return (
-      <div>
-        <VariableList variables={variables} visible={this.props.settings.showVariables} toggleVariables={this.props.toggleVariables} toggleVariable={this.toggleVariable} />
-        <Header
-          appendResults={settings.appendResults}
-          clearResults={() => this.clearResults()}
-          toggleAppendResults={() => this.toggleAppendResults()}>
-        </Header>
-        <ResultList results={this.props.results}></ResultList>
-        {children}
-      </div>
-    );
-  }
+    constructor(props?: AppProps, context?: any) {
+        super(props, context)
+        // Use io (object) available in the script
+        this.socket = (window as any).io();
+        this.socket.on('connect', () => {
+            // Do nothing
+        });
+        // this.socket.on('view.appendResults', (value: any) => {
+        // });
+        this.socket.on('clientExists', (data: any) => {
+            this.socket.emit('clientExists', { id: data.id });
+        });
+        this.socket.on('results', (value: NotebookOutput[]) => {
+            if (!this.props.settings.appendResults) {
+                this.props.resultActions.clearResults();
+            }
+            this.socket.emit('results.ack');
+            this.props.resultActions.addResults(value);
+
+            let resultsList = document.getElementById('results-list');
+            resultsList.scrollTop = resultsList.scrollHeight;
+        });
+    }
+
+    private toggleAppendResults() {
+        const value = !this.props.settings.appendResults;
+        this.socket.emit('vscode.settings.updateAppendResults', value);
+        this.props.resultActions.setAppendResults(value);
+    }
+
+    private clearResults() {
+        this.socket.emit('clearResults');
+        this.props.resultActions.clearResults();
+    }
+
+    render() {
+        const { children, results, settings } = this.props;
+        return (
+            <div>
+                <Header
+                    appendResults={settings.appendResults}
+                    clearResults={() => this.clearResults()}
+                    toggleAppendResults={() => this.toggleAppendResults()}>
+                </Header>
+                <ResultList results={results}></ResultList>
+                {children}
+            </div>
+        );
+    }
 }
 
 function mapStateToProps(state: RootState) {
-  return {
-    settings: state.settings,
-    variables: state.variables,
-    results: state.results
-  };
+    return {
+        settings: state.settings,
+        results: state.results
+    };
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-  return {
-    resultActions: bindActionCreators(ResultActions as any, dispatch),
-    toggleVariables: (toggle: boolean) => {
-      dispatch({ type: Actions.TOGGLE_VARIABLES, payload: toggle })
-    },
-    toggleVariable: (name: string, toggle: boolean) => {
-      dispatch({ type: Actions.TOGGLE_VARIABLE, payload: { [name]: toggle } })
-    }
-  };
+function mapDispatchToProps(dispatch) {
+    return {
+        resultActions: bindActionCreators(ResultActions as any, dispatch)
+    };
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(App);
