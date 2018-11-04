@@ -1,5 +1,0 @@
-- Do we need to store the results so we can move the results view aroung (tricky issues)
-- Not getting the option to Shutdown the notebook
-- When starting a newnotebook, we need to display the notebook in the statusbar (user can then kill it) (use this octicon '.octicon-book')
-- Handle closing of results view (when closed, clear the buffered results)
-- Look at existing issues
