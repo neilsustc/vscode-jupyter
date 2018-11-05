@@ -2,8 +2,6 @@
 
 [![AppVeyor](https://img.shields.io/appveyor/ci/neilsustc/vscode-jupyter.svg?style=flat-square&label=appveyor%20build)](https://ci.appveyor.com/project/neilsustc/vscode-jupyter/build/artifacts)
 
-Click above badge to download the latest `.vsix`
-
 ## Features
 
 In addition to the [Jupyter extension by DonJayamanne](https://marketplace.visualstudio.com/items?itemName=donjayamanne.jupyter), we have
@@ -40,6 +38,10 @@ Recommend [Highlight](https://marketplace.visualstudio.com/items?itemName=fabios
     }
 }
 ```
+
+## Preview Version
+
+Download the preview version (`.vsix` file) [here](https://ci.appveyor.com/project/neilsustc/vscode-jupyter/build/artifacts)
 
 ## Others
 

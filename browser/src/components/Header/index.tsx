@@ -38,7 +38,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 &nbsp;
                 <button className={'clear-output'}
                     style={{ verticalAlign: 'middle' }}
-                    title={'clear output'}
+                    title={'Clear Output'}
                     onClick={() => this.props.clearResults()}></button>
             </header>
         );
