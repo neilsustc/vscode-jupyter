@@ -1,14 +1,19 @@
-import { window, StatusBarItem, Disposable } from 'vscode';
+import { StatusBarItem, window } from 'vscode';
 
 export class ProgressBar {
     private static _instance = new ProgressBar();
-    public static get Instance(): ProgressBar {
-        return ProgressBar._instance;
-    }
     private progressStatusBar: StatusBarItem;
+    private progressInterval: NodeJS.Timer;
+    private promises: Promise<any>[] = [];
+
     constructor() {
         this.progressStatusBar = window.createStatusBarItem();
     }
+
+    public static get Instance(): ProgressBar {
+        return ProgressBar._instance;
+    }
+
     dispose() {
         this.progressStatusBar.dispose();
         if (this.progressInterval) {
@@ -16,8 +21,7 @@ export class ProgressBar {
             this.progressInterval = null;
         }
     }
-    private progressInterval: NodeJS.Timer;
-    private promises: Promise<any>[] = [];
+
     setProgressMessage(message: string, promise: Promise<any>) {
         this.promises.push(promise);
         if (this.progressInterval) {
@@ -25,15 +29,12 @@ export class ProgressBar {
         }
         this.progressStatusBar.text = message;
         this.progressStatusBar.show();
-        let counter = 1;
-        const suffix = ['', '.', '..'];
+        let counter = 0;
+        const suffix = ['', '.', '..', '...'];
         this.progressInterval = setInterval(() => {
-            this.progressStatusBar.text = message + suffix[counter % 3];
+            this.progressStatusBar.text = message + suffix[counter % 4];
             counter++;
-            if (counter > 3) {
-                counter = 0;
-            }
-        }, 250);
+        }, 500);
 
         promise
             .then(() => {

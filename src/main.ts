@@ -8,7 +8,7 @@ import { LanguageProviders } from './common/languageProvider';
 import { formatErrorForLogging } from './common/utils';
 import { ParsedIOMessage } from './contracts';
 import { KernelStatus } from './display/kernelStatus';
-import { JupyterDisplay } from './display/main';
+import { JupyterDisplay, ProgressBar } from './display/main';
 import { JupyterCodeLensProvider } from './editorIntegration/codeLensProvider';
 import { JupyterSymbolProvider } from './editorIntegration/symbolProvider';
 import { MessageParser } from './jupyterServices/jupyter_client/resultParser';
@@ -46,6 +46,7 @@ export class Jupyter extends Disposable {
     public dispose() {
         this.kernelManager.dispose();
         this.disposables.forEach(d => d.dispose());
+        ProgressBar.Instance.dispose();
     }
 
     private getKernelManager(): Promise<KernelManagerImpl> {
