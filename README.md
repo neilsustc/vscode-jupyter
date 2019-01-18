@@ -9,11 +9,16 @@ In addition to the [Jupyter extension by DonJayamanne](https://marketplace.visua
 - Auto scrolling to bottom when showing results ([DonJayamanne/vscodeJupyter#97](https://github.com/DonJayamanne/vscodeJupyter/pull/97))
 
 - Default keybinding
-    - <kbd>Ctrl</kbd> + <kbd>Enter</kbd> for `execCurrentCell`
+
+  - <kbd>Ctrl</kbd> + <kbd>Enter</kbd> for `execCurrentCell`
+
+  - **Tip**: Use <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Enter</kbd> to execute selected code (or current line if no selection)
 
 - Many UI improvements
 
 - New option `jupyter.codelens.enabled` (default `false`)
+
+## Demo
 
 ![demo](images/demo.gif)
 
