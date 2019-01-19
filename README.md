@@ -1,6 +1,6 @@
 # Jupyter
 
-[![AppVeyor](https://img.shields.io/appveyor/ci/neilsustc/vscode-jupyter.svg?style=flat-square&label=appveyor%20build)](https://ci.appveyor.com/project/neilsustc/vscode-jupyter/build/artifacts)
+[![AppVeyor](https://img.shields.io/appveyor/ci/yzhang-gh/vscode-jupyter.svg?style=flat-square&label=appveyor%20build)](https://ci.appveyor.com/project/yzhang-gh/vscode-jupyter/build/artifacts)
 
 ## Features
 
@@ -46,7 +46,7 @@ Recommend [Highlight](https://marketplace.visualstudio.com/items?itemName=fabios
 
 ## Preview Version
 
-Download the preview version (`.vsix` file) [here](https://ci.appveyor.com/project/neilsustc/vscode-jupyter/build/artifacts)
+Download the preview version (`.vsix` file) [here](https://ci.appveyor.com/project/yzhang-gh/vscode-jupyter/build/artifacts)
 
 ## Others
 
