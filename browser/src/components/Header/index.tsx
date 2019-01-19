@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 interface HeaderProps {
-    clearResults: () => any;
     toggleAppendResults: () => any;
     appendResults: boolean;
 }
@@ -33,13 +32,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                         style={{ verticalAlign: 'middle' }}
                         checked={this.props.appendResults}
                         onChange={() => this.props.toggleAppendResults()} />
-                    <span>append results</span>
+                    <span>Append results</span>
                 </label>
-                &nbsp;
-                <button className={'clear-output'}
-                    style={{ verticalAlign: 'middle' }}
-                    title={'Clear Output'}
-                    onClick={() => this.props.clearResults()}></button>
             </header>
         );
     }

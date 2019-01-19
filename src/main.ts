@@ -266,6 +266,9 @@ export class Jupyter extends Disposable {
             }),
             commands.registerCommand(Commands.Jupyter.Notebook.ShutDown, () => {
                 this.notebookManager.shutdown();
+            }),
+            commands.registerCommand("extension.jupyter.clearResults", () => {
+                this.display.clearResults();
             })
         );
     }

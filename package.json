@@ -94,6 +94,14 @@
                 "command": "jupyter.selectExistingNotebook",
                 "title": "Select an existing (local) Jupyter Notebook",
                 "category": "Jupyter"
+            },
+            {
+                "command": "extension.jupyter.clearResults",
+                "title": "Jupyter: Clear Results",
+                "icon": {
+                    "light": "./media/clear_output.svg",
+                    "dark": "./media/clear_output_inverse.svg"
+                }
             }
         ],
         "menus": {
@@ -144,6 +152,13 @@
                     "title": "Go to Next Cell",
                     "category": "Jupyter",
                     "when": "jupyter.document.hasCodeCells"
+                }
+            ],
+            "editor/title": [
+                {
+                    "when": "jupyter.results.focused",
+                    "command": "extension.jupyter.clearResults",
+                    "group": "navigation"
                 }
             ]
         },

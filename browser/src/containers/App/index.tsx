@@ -21,17 +21,18 @@ class App extends React.Component<AppProps, AppState>{
     private socket: SocketIOClient.Socket;
 
     constructor(props?: AppProps, context?: any) {
-        super(props, context)
+        super(props, context);
+
         // Use io (object) available in the script
         this.socket = (window as any).io();
         this.socket.on('connect', () => {
             // Do nothing
         });
-        // this.socket.on('view.appendResults', (value: any) => {
-        // });
+
         this.socket.on('clientExists', (data: any) => {
             this.socket.emit('clientExists', { id: data.id });
         });
+
         this.socket.on('results', (value: NotebookOutput[]) => {
             if (!this.props.settings.appendResults) {
                 this.props.resultActions.clearResults();
@@ -42,6 +43,12 @@ class App extends React.Component<AppProps, AppState>{
             let resultsList = document.getElementById('results-list');
             resultsList.scrollTop = resultsList.scrollHeight;
         });
+
+        this.socket.on('clearClientResults', () => {
+            this.props.resultActions.clearResults();
+        });
+
+        // TODO setAppendResults
     }
 
     private toggleAppendResults() {
@@ -50,18 +57,11 @@ class App extends React.Component<AppProps, AppState>{
         this.props.resultActions.setAppendResults(value);
     }
 
-    private clearResults() {
-        this.socket.emit('clearResults');
-        this.props.resultActions.clearResults();
-    }
-
     render() {
         const { children, results, settings } = this.props;
         return (
             <div>
-                <Header
-                    appendResults={settings.appendResults}
-                    clearResults={() => this.clearResults()}
+                <Header appendResults={settings.appendResults}
                     toggleAppendResults={() => this.toggleAppendResults()}>
                 </Header>
                 <ResultList results={results}></ResultList>

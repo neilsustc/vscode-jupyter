@@ -7,14 +7,3 @@ body {
     font-family: var(--editor-font-family);
     font-size: var(--editor-font-size);
 }
-
-button.clear-output {
-    width: 16px;
-    height: 16px;
-    background: url('clear_output_inverse.svg') center center no-repeat;
-    margin: 0;
-    padding: 0;
-    border: none;
-    outline: none;
-    cursor: pointer;
-}

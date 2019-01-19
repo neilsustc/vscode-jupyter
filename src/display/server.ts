@@ -92,6 +92,12 @@ export class Server extends EventEmitter {
 
     private buffer: any[] = [];
 
+    public clearClientResults() {
+        if (this.clients.length > 0) {
+            this.clients[0].emit('clearClientResults');
+        }
+    }
+
     public clearBuffer() {
         this.buffer = [];
     }
