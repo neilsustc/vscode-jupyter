@@ -118,7 +118,10 @@ export class JupyterDisplay extends vscode.Disposable {
         const def = createDeferred<any>();
 
         if (this.panel === undefined) {
-            this.panel = vscode.window.createWebviewPanel('jupyter-results', 'Jupyter Results', vscode.ViewColumn.Two, { enableScripts: true });
+            this.panel = vscode.window.createWebviewPanel('jupyter-results', 'Jupyter Results', vscode.ViewColumn.Two, {
+                enableScripts: true,
+                retainContextWhenHidden: true
+            });
 
             this.panel.webview.html = `
             <!DOCTYPE html>
