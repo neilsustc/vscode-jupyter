@@ -145,13 +145,14 @@ export class JupyterDisplay extends vscode.Disposable {
                             fontSize = computedStyle.fontSize;
                             fontWeight = computedStyle.fontWeight;
                             theme = document.body.className;
-                        } catch(ex) { }
-                        document.getElementById('myframe').src = 'http://localhost:${port}/?theme=' + theme + '&color=' + encodeURIComponent(color) + "&backgroundColor=" + encodeURIComponent(backgroundColor) + "&fontFamily=" + encodeURIComponent(fontFamily) + "&fontWeight=" + encodeURIComponent(fontWeight) + "&fontSize=" + encodeURIComponent(fontSize);
+                        } catch (ex) { }
+                    
+                        document.getElementById('resultsFrame').src = 'http://localhost:${port}/?theme=' + theme + '&color=' + encodeURIComponent(color) + "&backgroundColor=" + encodeURIComponent(backgroundColor) + "&fontFamily=" + encodeURIComponent(fontFamily) + "&fontWeight=" + encodeURIComponent(fontWeight) + "&fontSize=" + encodeURIComponent(fontSize);
                     }
                 </script>
             </head>
             <body onload="start()">
-                <iframe id="myframe" frameborder="0" style="border: 0px solid transparent; height: calc(100% - 4px); width: 100%;" src="" seamless></iframe>
+                <iframe id="resultsFrame" frameborder="0" style="border: 0px solid transparent; height: calc(100% - 3px); width: 100%;" src="" seamless></iframe>
             </body>
             </html>`;
 

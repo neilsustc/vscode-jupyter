@@ -40,7 +40,7 @@ class App extends React.Component<AppProps, AppState>{
             this.socket.emit('results.ack');
             this.props.resultActions.addResults(value);
 
-            let resultsList = document.getElementById('results-list');
+            let resultsList = document.getElementById('viewport');
             resultsList.scrollTop = resultsList.scrollHeight;
         });
 
@@ -57,13 +57,19 @@ class App extends React.Component<AppProps, AppState>{
         this.props.resultActions.setAppendResults(value);
     }
 
+    private styles: React.CSSProperties = {
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        overflow: 'auto'
+    }
+
     render() {
         const { children, results, settings } = this.props;
         return (
-            <div>
-                <Header appendResults={settings.appendResults}
-                    toggleAppendResults={() => this.toggleAppendResults()}>
-                </Header>
+            <div id={'viewport'} style={this.styles}>
                 <ResultList results={results}></ResultList>
                 {children}
             </div>

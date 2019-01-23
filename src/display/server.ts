@@ -186,6 +186,8 @@ export class Server extends EventEmitter {
                     body {
                         background-color: ${values.backgroundColor};
                         color: ${values.color};
+                        margin: 0;
+                        width: fit-content;
                     }
                 </style>
                 <link rel="stylesheet" type="text/css" href="/main.css" />
