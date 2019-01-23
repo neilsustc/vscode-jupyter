@@ -160,6 +160,10 @@ export class JupyterDisplay extends vscode.Disposable {
             this.panel.onDidChangeViewState(_ => {
                 vscode.commands.executeCommand('setContext', 'jupyter.results.focused', this.panel.active);
             });
+
+            this.panel.onDidDispose(_ => {
+                this.panel = undefined;
+            });
         }
 
         def.resolve();
