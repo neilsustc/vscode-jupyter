@@ -2,7 +2,7 @@
     "name": "vscode-jupyter",
     "displayName": "Jupyter",
     "description": "Data Science with Jupyter on Visual Studio Code",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "publisher": "yzhang",
     "engines": {
         "vscode": "^1.29.0"

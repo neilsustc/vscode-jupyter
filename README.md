@@ -2,6 +2,8 @@
 
 [![AppVeyor](https://img.shields.io/appveyor/ci/yzhang-gh/vscode-jupyter.svg?style=flat-square&label=appveyor%20build)](https://ci.appveyor.com/project/yzhang-gh/vscode-jupyter/build/artifacts)
 
+![demo](images/demo.gif)
+
 ## Features
 
 In addition to the [Jupyter extension by DonJayamanne](https://marketplace.visualstudio.com/items?itemName=donjayamanne.jupyter), we have
@@ -18,31 +20,11 @@ In addition to the [Jupyter extension by DonJayamanne](https://marketplace.visua
 
 - New option `jupyter.codelens.enabled` (default `false`)
 
-## Demo
+- New commands
 
-![demo](images/demo.gif)
+  - Jupyter: Clear Results
 
----
-
-Recommend [Highlight](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-highlight) extension with setting
-
-```json
-"highlight.regexes": {
-    "(^# ?%%.*)": {
-        "decorations": [
-            {
-                "after": {
-                    "border": "1px dashed #999",
-                    "contentText": "",
-                    "height": "2px",
-                    "margin": "0 0 4px 10px",
-                    "width": "50%"
-                }
-            }
-        ]
-    }
-}
-```
+  - Jupyter: Toggle Append Results
 
 ## Preview Version
 
