@@ -33,6 +33,9 @@ export class Jupyter extends Disposable {
     private kernelCreationPromise: Deferred<KernelManagerImpl>;
     private jupyterVersionWorksWithJSServices: boolean;
 
+    private updateDecorationTimeout = null;
+    private cellDecorationType = window.createTextEditorDecorationType({ isWholeLine: true, border: '1px dashed #999', borderWidth: '1px 0 0' });
+
     constructor(private outputChannel: OutputChannel) {
         super(() => { });
         this.disposables = [];
@@ -40,6 +43,7 @@ export class Jupyter extends Disposable {
 
         this.registerCommands();
         this.registerKernelCommands();
+        this.registerDecorations();
         this.activate();
     }
 
@@ -298,5 +302,53 @@ export class Jupyter extends Disposable {
                 });
             })
         );
+    }
+
+    /* ┌──────────────────┐
+       │ Cell Decorations │
+       └──────────────────┘ */
+
+    private registerDecorations() {
+        window.onDidChangeActiveTextEditor(this.updateDecorations);
+
+        workspace.onDidChangeTextDocument(event => {
+            let editor = window.activeTextEditor;
+            if (editor !== undefined && event.document === editor.document) {
+                this.triggerUpdateDecorations(editor);
+            }
+        });
+
+        let editor = window.activeTextEditor;
+        if (editor) {
+            this.updateDecorations(editor);
+        }
+    }
+
+    private triggerUpdateDecorations(editor) {
+        if (this.updateDecorationTimeout) {
+            clearTimeout(this.updateDecorationTimeout);
+        }
+        this.updateDecorationTimeout = setTimeout(() => this.updateDecorations(editor), 200);
+    }
+
+    private updateDecorations(editor?: TextEditor) {
+        // if (!workspace.getConfiguration('extension.jupyter.cell').get<boolean>('decorations')) return;
+
+        if (editor === undefined) {
+            editor = window.activeTextEditor;
+        }
+
+        if (!(editor && editor.document && editor.document.languageId === 'python')) {
+            return;
+        }
+
+        editor.setDecorations(this.cellDecorationType, []);
+
+        editor.setDecorations(this.cellDecorationType, editor.document.getText().split(/\r?\n/g).reduce((previous, current, idx) => {
+            if (/^# ?%%/.test(current) && idx !== 0) {
+                previous.push(new Range(idx, 0, idx, 1));
+            }
+            return previous;
+        }, []));
     }
 };
