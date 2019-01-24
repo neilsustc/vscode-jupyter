@@ -141,14 +141,6 @@ export class Server extends EventEmitter {
             def.resolve(true);
         });
 
-        socket.on('vscode.settings.updateAppendResults', (data: any) => {
-            this.emit('vscode.settings.updateAppendResults', data);
-        });
-
-        socket.on('clearResults', () => {
-            this.buffer = [];
-        });
-
         socket.on('results.ack', () => {
             this.buffer = [];
         });

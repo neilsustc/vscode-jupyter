@@ -53,12 +53,6 @@ class App extends React.Component<AppProps, AppState>{
         });
     }
 
-    private toggleAppendResults() {
-        const value = !this.props.settings.appendResults;
-        this.socket.emit('vscode.settings.updateAppendResults', value);
-        this.props.resultActions.setAppendResults(value);
-    }
-
     private styles: React.CSSProperties = {
         position: 'fixed',
         top: 0,
@@ -69,7 +63,7 @@ class App extends React.Component<AppProps, AppState>{
     }
 
     render() {
-        const { children, results, settings } = this.props;
+        const { children, results } = this.props;
         return (
             <div id={'viewport'} style={this.styles}>
                 <ResultList results={results}></ResultList>
