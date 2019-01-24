@@ -93,8 +93,14 @@ export class Server extends EventEmitter {
     private buffer: any[] = [];
 
     public clearClientResults() {
-        if (this.clients.length > 0) {
-            this.clients[0].emit('clearClientResults');
+        for (const client of this.clients) {
+            client.emit('clearClientResults');
+        }
+    }
+
+    public setClientAppendResults(value: boolean) {
+        for (const client of this.clients) {
+            client.emit('setClientAppendResults', value);
         }
     }
 

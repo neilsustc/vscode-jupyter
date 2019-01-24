@@ -269,6 +269,9 @@ export class Jupyter extends Disposable {
             }),
             commands.registerCommand("extension.jupyter.clearResults", () => {
                 this.display.clearResults();
+            }),
+            commands.registerCommand("extension.jupyter.toggleAppendResults", () => {
+                this.display.toggleAppendResults();
             })
         );
     }

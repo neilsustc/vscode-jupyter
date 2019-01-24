@@ -38,30 +38,11 @@ export class JupyterDisplay extends vscode.Disposable {
         this.disposables.push(vscode.workspace.registerTextDocumentContentProvider(jupyterSchema, this.previewWindow));
         this.cellOptions = new CellOptions(cellCodeLenses);
         this.disposables.push(this.cellOptions);
-        this.server.on('vscode.settings.updateAppendResults', append => {
-            vscode.workspace.getConfiguration('jupyter').update('appendResults', append, true)
-                .then(() => {
-                    // TODO: Need a better event name
-                    // Is it needed?
-                    // this.server.emit('view.appendResults', this.appendResults);
-                }, reason => {
-                    this.outputChannel.appendLine(formatErrorForLogging(reason));
-                    vscode.window.showErrorMessage('Failed to update the setting', 'View Errors')
-                        .then(item => {
-                            if (item === 'View Errors') {
-                                this.outputChannel.show();
-                            }
-                        });
-                });
-        });
+
         this.server.on('connected', () => {
             this.clientConnected = true;
-            // this.server.emit('view.appendResults', this.appendResults);
+            this.server.setClientAppendResults(vscode.workspace.getConfiguration('jupyter').get<boolean>('appendResults', true));
         });
-    }
-
-    private get appendResults(): boolean {
-        return vscode.workspace.getConfiguration('jupyter').get<boolean>('appendResults', true);
     }
 
     public setNotebook(nb: Notebook, canShutdown: boolean) {
@@ -71,6 +52,13 @@ export class JupyterDisplay extends vscode.Disposable {
 
     public clearResults() {
         this.server.clearClientResults();
+    }
+
+    public toggleAppendResults() {
+        const config = vscode.workspace.getConfiguration('jupyter');
+        const newValue = !config.get<boolean>('appendResults', true);
+        config.update('appendResults', newValue, true);
+        this.server.setClientAppendResults(newValue);
     }
 
     public showResults(results: Rx.Observable<ParsedIOMessage>): Promise<any> {

@@ -97,11 +97,17 @@
             },
             {
                 "command": "extension.jupyter.clearResults",
-                "title": "Jupyter: Clear Results",
+                "title": "Clear Results",
+                "category": "Jupyter",
                 "icon": {
                     "light": "./media/clear_output.svg",
                     "dark": "./media/clear_output_inverse.svg"
                 }
+            },
+            {
+                "command": "extension.jupyter.toggleAppendResults",
+                "title": "Toggle Append Results",
+                "category": "Jupyter"
             }
         ],
         "menus": {

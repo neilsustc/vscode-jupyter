@@ -48,7 +48,9 @@ class App extends React.Component<AppProps, AppState>{
             this.props.resultActions.clearResults();
         });
 
-        // TODO setAppendResults
+        this.socket.on('setClientAppendResults', value => {
+            this.props.resultActions.setAppendResults(value);
+        });
     }
 
     private toggleAppendResults() {
