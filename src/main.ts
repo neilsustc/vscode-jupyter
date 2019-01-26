@@ -309,7 +309,7 @@ export class Jupyter extends Disposable {
        └──────────────────┘ */
 
     private registerDecorations() {
-        window.onDidChangeActiveTextEditor(this.updateDecorations);
+        window.onDidChangeActiveTextEditor(editor => { this.updateDecorations(editor) });
 
         workspace.onDidChangeTextDocument(event => {
             let editor = window.activeTextEditor;
@@ -331,7 +331,7 @@ export class Jupyter extends Disposable {
         this.updateDecorationTimeout = setTimeout(() => this.updateDecorations(editor), 200);
     }
 
-    private updateDecorations(editor?: TextEditor) {
+    private updateDecorations(editor: TextEditor) {
         // if (!workspace.getConfiguration('extension.jupyter.cell').get<boolean>('decorations')) return;
 
         if (editor === undefined) {
