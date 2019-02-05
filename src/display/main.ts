@@ -2,23 +2,17 @@ import { Kernel } from '@jupyterlab/services';
 import * as vscode from 'vscode';
 import { Commands } from '../common/constants';
 import { createDeferred } from '../common/helpers';
-import { formatErrorForLogging } from '../common/utils';
 import { ParsedIOMessage } from '../contracts';
 import { JupyterCodeLensProvider } from '../editorIntegration/codeLensProvider';
 import { Notebook } from '../jupyterServices/notebook/contracts';
 import { CellOptions } from './cellOptions';
 import { KernelPicker } from './kernelPicker';
-import { TextDocumentContentProvider } from './resultView';
 import { Server } from './server';
 
 export { ProgressBar } from './progressBar';
 
-const jupyterSchema = 'jupyter-result-viewer';
-const previewUri = vscode.Uri.parse(jupyterSchema + '://authority/jupyter');
-
 export class JupyterDisplay extends vscode.Disposable {
     private disposables: vscode.Disposable[];
-    private previewWindow: TextDocumentContentProvider;
     private cellOptions: CellOptions;
     private server: Server;
     private clientConnected: boolean;
@@ -34,8 +28,6 @@ export class JupyterDisplay extends vscode.Disposable {
         this.disposables.push(this.server);
         this.disposables.push(new KernelPicker());
         this.disposables.push(vscode.commands.registerCommand(Commands.Jupyter.Kernel_Options, this.showKernelOptions.bind(this)));
-        this.previewWindow = new TextDocumentContentProvider();
-        this.disposables.push(vscode.workspace.registerTextDocumentContentProvider(jupyterSchema, this.previewWindow));
         this.cellOptions = new CellOptions(cellCodeLenses);
         this.disposables.push(this.cellOptions);
 
@@ -63,7 +55,6 @@ export class JupyterDisplay extends vscode.Disposable {
 
     public showResults(results: Rx.Observable<ParsedIOMessage>): Promise<any> {
         return this.server.start().then(port => {
-            this.previewWindow.ServerPort = port;
             // If we need to append the results, then do so if we have any result windows open
             let sendDataToResultView = this.server.clientsConnected(2000);
 
@@ -106,7 +97,7 @@ export class JupyterDisplay extends vscode.Disposable {
         const def = createDeferred<any>();
 
         if (this.panel === undefined) {
-            this.panel = vscode.window.createWebviewPanel('jupyter-results', 'Jupyter Results', vscode.ViewColumn.Two, {
+            this.panel = vscode.window.createWebviewPanel('jupyter-results', 'Jupyter Results', { viewColumn: vscode.ViewColumn.Two, preserveFocus: true }, {
                 enableScripts: true,
                 retainContextWhenHidden: true
             });

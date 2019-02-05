@@ -130,8 +130,6 @@ export class Server extends EventEmitter {
         });
 
         socket.on('clientExists', (data: { id: string }) => {
-            console.log('clientExists, on server');
-            console.log(data);
             if (!this.responsePromises.has(data.id)) {
                 console.log('Not found');
                 return;
