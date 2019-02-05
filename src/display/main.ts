@@ -65,6 +65,11 @@ export class JupyterDisplay extends vscode.Disposable {
                     results.subscribe(result => {
                         this.server.sendResults([result.data]);
                     });
+                    
+                    if (!this.panel.visible) {
+                        this.panel.reveal(vscode.ViewColumn.Two, true);
+                    }
+
                     return Promise.resolve();
                 }
 
