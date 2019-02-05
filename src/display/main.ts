@@ -102,7 +102,7 @@ export class JupyterDisplay extends vscode.Disposable {
         const def = createDeferred<any>();
 
         if (this.panel === undefined) {
-            this.panel = vscode.window.createWebviewPanel('jupyter-results', 'Jupyter Results', { viewColumn: vscode.ViewColumn.Two, preserveFocus: true }, {
+            this.panel = vscode.window.createWebviewPanel('jupyter-results', 'Jupyter Results', vscode.ViewColumn.Two, {
                 enableScripts: true,
                 retainContextWhenHidden: true
             });
@@ -140,6 +140,7 @@ export class JupyterDisplay extends vscode.Disposable {
             </body>
             </html>`;
 
+            // Force the result view to grab focus because there is no `onDidChangeViewState` event when it is focused the first time.
             vscode.commands.executeCommand('setContext', 'jupyter.results.focused', true);
 
             this.panel.onDidChangeViewState(_ => {
