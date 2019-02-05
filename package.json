@@ -251,7 +251,7 @@
         }
     },
     "scripts": {
-        "vscode:prepublish": "tsc -p ./ && webpack -p --colors",
+        "vscode:prepublish": "tsc -p ./ && npx webpack -p --colors",
         "vscode:prepublishx": "tsc -p ./ && webpack -p --progress --colors",
         "compilex": "webpack && tsc -watch -p ./",
         "compile": "tsc -watch -p ./",
