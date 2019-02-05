@@ -174,19 +174,19 @@ export class Server extends EventEmitter {
                 <meta charset="utf-8">
                 <title>Jupyter Notebook</title>
                 <style>
-                    :root {
-                        --editor-font-family: ${values.editorFontFamily};
-                        --editor-font-size: ${values.editorFontSize}px;
-                    }
-
                     body {
                         background-color: ${values.backgroundColor};
                         color: ${values.color};
                         margin: 0;
                         width: fit-content;
                     }
+
+                    body,
+                    #results-list code {
+                        font-family: ${values.editorFontFamily};
+                        font-size: ${values.editorFontSize}px;
+                    }
                 </style>
-                <link rel="stylesheet" type="text/css" href="/main.css" />
                 ${values.theme === 'vscode-light'
                 ? '<link rel="stylesheet" type="text/css" href="/color-theme-light.css" />'
                 : '<link rel="stylesheet" type="text/css" href="/color-theme-dark.css" />'}

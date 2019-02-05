@@ -1,9 +1,0 @@
-body {
-    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, HelveticaNeue-Light, Noto Sans, Microsoft YaHei, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Source Han Sans, sans-serif;
-    font-size: 14px;
-}
-
-#results-list code {
-    font-family: var(--editor-font-family);
-    font-size: var(--editor-font-size);
-}
