@@ -16,7 +16,13 @@ In addition to the [Jupyter extension by DonJayamanne](https://marketplace.visua
 
   - **Tip**: Use <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Enter</kbd> to execute selected code (or current line if no selection)
 
-- Many UI improvements
+- Many UX improvements
+
+  - Neat result view
+
+  - Dash line between cells
+
+  - ...
 
 - New option `jupyter.codelens.enabled` (default `false`)
 
