@@ -314,7 +314,7 @@
         "tslint": "4.5.1",
         "typescript": "2.6.2",
         "url-loader": "0.5.9",
-        "vscode": "1.1.10",
+        "vscode": "1.1.29",
         "webpack": "2.7.0",
         "webpack-dev-server": "2.9.7",
         "webpack-hot-middleware": "2.16.1"
@@ -329,16 +329,15 @@
         "requirejs": "2.3.5",
         "rx": "4.1.0",
         "semver": "5.4.1",
-        "socket.io": "1.7.4",
-        "tcp-port-used": "0.1.2",
+        "socket.io": "2.2.0",
+        "tcp-port-used": "1.0.1",
         "tmp": "0.0.31",
         "transformime": "3.2.1",
-        "transformime-marked": "0.0.1",
         "transformime-react": "1.1.0",
         "uint64be": "2.0.1",
-        "uniqid": "4.1.1",
+        "uniqid": "5.0.3",
         "vscode-extension-telemetry": "0.0.5",
-        "ws": "2.3.1",
+        "ws": "6.1.4",
         "xmlhttprequest": "1.8.0"
     }
 }
