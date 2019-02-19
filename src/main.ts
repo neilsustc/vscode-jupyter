@@ -43,7 +43,7 @@ export class Jupyter extends Disposable {
 
         this.registerCommands();
         this.registerKernelCommands();
-        this.registerDecorations();
+        this.registerDecorationsAndSetContext();
         this.activate();
     }
 
@@ -308,8 +308,8 @@ export class Jupyter extends Disposable {
        │ Cell Decorations │
        └──────────────────┘ */
 
-    private registerDecorations() {
-        window.onDidChangeActiveTextEditor(editor => { this.updateDecorations(editor) });
+    private registerDecorationsAndSetContext() {
+        window.onDidChangeActiveTextEditor(editor => { this.updateDecorationsAndContext(editor) });
 
         workspace.onDidChangeTextDocument(event => {
             let editor = window.activeTextEditor;
@@ -320,7 +320,7 @@ export class Jupyter extends Disposable {
 
         let editor = window.activeTextEditor;
         if (editor) {
-            this.updateDecorations(editor);
+            this.updateDecorationsAndContext(editor);
         }
     }
 
@@ -328,10 +328,10 @@ export class Jupyter extends Disposable {
         if (this.updateDecorationTimeout) {
             clearTimeout(this.updateDecorationTimeout);
         }
-        this.updateDecorationTimeout = setTimeout(() => this.updateDecorations(editor), 200);
+        this.updateDecorationTimeout = setTimeout(() => this.updateDecorationsAndContext(editor), 200);
     }
 
-    private updateDecorations(editor: TextEditor) {
+    private updateDecorationsAndContext(editor: TextEditor) {
         // if (!workspace.getConfiguration('extension.jupyter.cell').get<boolean>('decorations')) return;
 
         if (editor === undefined) {
@@ -344,11 +344,15 @@ export class Jupyter extends Disposable {
 
         editor.setDecorations(this.cellDecorationType, []);
 
-        editor.setDecorations(this.cellDecorationType, editor.document.getText().split(/\r?\n/g).reduce((previous, current, idx) => {
-            if (/^# ?%%/.test(current) && idx !== 0) {
+        const ranges = editor.document.getText().split(/\r?\n/g).reduce((previous, current, idx) => {
+            if (/^# ?%%/.test(current)) {
                 previous.push(new Range(idx, 0, idx, 1));
             }
             return previous;
-        }, []));
+        }, []);
+
+        editor.setDecorations(this.cellDecorationType, ranges);
+
+        commands.executeCommand('setContext', 'jupyter.document.hasCodeCells', ranges.length > 0);
     }
 };
