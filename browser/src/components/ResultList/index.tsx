@@ -16,7 +16,8 @@ class ResultList extends React.Component<ResultProps, ResultState> {
     }
 
     private styles: React.CSSProperties = {
-        padding: '1em',
+        lineHeight: 1.375,
+        padding: '1rem',
         width: 'fit-content'
     };
 

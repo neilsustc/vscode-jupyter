@@ -38,6 +38,7 @@ class ResultList extends React.Component<ResultListProps, ResultListState> {
         // If dealing with images, set the background color to white
         if (mimetype.startsWith('image')) {
             style['backgroundColor'] = 'white';
+            style['width'] = 'fit-content';
         }
         if (mimetype === 'text/plain') {
             style['white-space'] = 'pre';
